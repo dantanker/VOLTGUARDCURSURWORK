@@ -7,9 +7,9 @@ export function HeroSection() {
   return (
     <section className="bg-slate-900 pt-4 pb-12 md:pt-8 md:pb-20">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="grid lg:grid-cols-5 gap-8 lg:gap-12 items-start">
+        <div className="grid lg:grid-cols-3 gap-8 lg:gap-12 items-start">
           {/* Left Column - Content */}
-          <div className="lg:col-span-3 space-y-6">
+          <div className="lg:col-span-2 space-y-6">
             {/* Badge */}
             <FadeInUp delay={0}>
               <Badge className="bg-orange-500/10 text-orange-400 border-orange-500/20 hover:bg-orange-500/20">
@@ -68,7 +68,9 @@ export function HeroSection() {
 
           {/* Right Column - Form */}
           <SlideInRight delay={0.2}>
-            <LeadCaptureForm />
+            <div className="w-full">
+              <LeadCaptureForm />
+            </div>
           </SlideInRight>
         </div>
       </div>
