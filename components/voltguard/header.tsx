@@ -27,10 +27,7 @@ export function Header() {
 
   const scrollToForm = () => {
     trackEvent(EVENTS.CTA_CLICK, { location: "header" })
-    const formElement = document.getElementById("hero-form")
-    if (formElement) {
-      formElement.scrollIntoView({ behavior: "smooth" })
-    }
+    window.scrollTo({ top: 0, behavior: "smooth" })
     setIsMobileMenuOpen(false)
   }
 
