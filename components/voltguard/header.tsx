@@ -4,7 +4,7 @@ import { useState, useEffect } from "react"
 import Link from "next/link"
 import { Zap, Menu, X } from "lucide-react"
 import { Button } from "@/components/ui/button"
-import { PHONE_NUMBER, PHONE_LINK } from "@/lib/constants"
+import { PHONE_NUMBER } from "@/lib/constants"
 import { trackEvent, EVENTS } from "@/lib/analytics"
 
 export function Header() {
@@ -26,10 +26,6 @@ export function Header() {
       formElement.scrollIntoView({ behavior: "smooth" })
     }
     setIsMobileMenuOpen(false)
-  }
-
-  const handlePhoneClick = () => {
-    trackEvent(EVENTS.PHONE_LINK_CLICK, { location: "header" })
   }
 
   return (
@@ -55,13 +51,9 @@ export function Header() {
 
           {/* Desktop Navigation */}
           <div className="hidden md:flex items-center gap-6">
-            <a 
-              href={PHONE_LINK}
-              onClick={handlePhoneClick}
-              className="text-slate-300 hover:text-white transition-colors font-medium"
-            >
+            <span className="text-slate-300 font-medium">
               {PHONE_NUMBER}
-            </a>
+            </span>
             <Button 
               onClick={scrollToForm}
               className="bg-orange-500 hover:bg-orange-600 text-white font-semibold px-6"
@@ -84,13 +76,9 @@ export function Header() {
         {isMobileMenuOpen && (
           <div className="md:hidden py-4 border-t border-slate-800">
             <div className="flex flex-col gap-4">
-              <a 
-                href={PHONE_LINK}
-                onClick={handlePhoneClick}
-                className="text-slate-300 hover:text-white transition-colors font-medium text-center py-2"
-              >
+              <span className="text-slate-300 font-medium text-center py-2">
                 Call: {PHONE_NUMBER}
-              </a>
+              </span>
               <Button 
                 onClick={scrollToForm}
                 className="bg-orange-500 hover:bg-orange-600 text-white font-semibold w-full"
