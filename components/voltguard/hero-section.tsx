@@ -10,36 +10,42 @@ export function HeroSection() {
           {/* Left Column - Content */}
           <div className="lg:col-span-3 space-y-6">
             {/* Badge */}
-            <Badge className="bg-orange-500/10 text-orange-400 border-orange-500/20 hover:bg-orange-500/20">
-              <Clock className="w-3 h-3 mr-1" />
-              24/7 Emergency Response
-            </Badge>
+            <div className="animate-fade-in-up" style={{ animationDelay: "0ms" }}>
+              <Badge className="bg-orange-500/10 text-orange-400 border-orange-500/20 hover:bg-orange-500/20">
+                <Clock className="w-3 h-3 mr-1" />
+                24/7 Emergency Response
+              </Badge>
+            </div>
 
             {/* Headline */}
-            <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-white leading-tight text-balance">
-              {"Chicago's Most Trusted Emergency Electricians"}
-            </h1>
+            <div className="animate-fade-in-up" style={{ animationDelay: "100ms" }}>
+              <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-white leading-tight text-balance">
+                {"Chicago's Most Trusted Emergency Electricians"}
+              </h1>
+            </div>
 
             {/* Subheadline */}
-            <p className="text-lg sm:text-xl text-slate-300 leading-relaxed max-w-2xl">
-              Fast, transparent, licensed. {"We'll"} have power restored before you finish your coffee.
-            </p>
+            <div className="animate-fade-in-up" style={{ animationDelay: "200ms" }}>
+              <p className="text-lg sm:text-xl text-slate-300 leading-relaxed max-w-2xl">
+                Fast, transparent, licensed. {"We'll"} have power restored before you finish your coffee.
+              </p>
+            </div>
 
             {/* Trust Badges */}
-            <div className="flex flex-wrap gap-4 pt-2">
-              <div className="flex items-center gap-2 text-slate-300">
+            <div className="animate-fade-in-up flex flex-wrap gap-4 pt-2" style={{ animationDelay: "300ms" }}>
+              <div className="flex items-center gap-2 text-slate-300 hover:text-white transition-colors">
                 <div className="w-8 h-8 bg-blue-600/20 rounded-lg flex items-center justify-center">
                   <Shield className="w-4 h-4 text-blue-400" />
                 </div>
                 <span className="text-sm font-medium">Licensed & Insured</span>
               </div>
-              <div className="flex items-center gap-2 text-slate-300">
+              <div className="flex items-center gap-2 text-slate-300 hover:text-white transition-colors">
                 <div className="w-8 h-8 bg-blue-600/20 rounded-lg flex items-center justify-center">
                   <BadgeCheck className="w-4 h-4 text-blue-400" />
                 </div>
                 <span className="text-sm font-medium">Background-Checked</span>
               </div>
-              <div className="flex items-center gap-2 text-slate-300">
+              <div className="flex items-center gap-2 text-slate-300 hover:text-white transition-colors">
                 <div className="w-8 h-8 bg-blue-600/20 rounded-lg flex items-center justify-center">
                   <span className="text-blue-400 text-xs font-bold">$</span>
                 </div>
@@ -48,7 +54,7 @@ export function HeroSection() {
             </div>
 
             {/* Social Proof Stat */}
-            <div className="pt-4 hidden lg:block">
+            <div className="pt-4 hidden lg:block animate-fade-in-up" style={{ animationDelay: "400ms" }}>
               <p className="text-slate-400 text-sm">
                 <span className="text-white font-semibold">2,847 Chicago families</span> served this year
               </p>
@@ -56,7 +62,7 @@ export function HeroSection() {
           </div>
 
           {/* Right Column - Form */}
-          <div className="lg:col-span-2">
+          <div className="lg:col-span-2 animate-slide-in-right" style={{ animationDelay: "200ms" }}>
             <LeadCaptureForm />
           </div>
         </div>
@@ -64,3 +70,4 @@ export function HeroSection() {
     </section>
   )
 }
+

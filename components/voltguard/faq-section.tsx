@@ -20,10 +20,10 @@ export function FAQSection() {
     <section id="faq" className="bg-slate-50 py-16 md:py-24 scroll-mt-20">
       <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-12">
-          <h2 className="text-2xl sm:text-3xl font-bold text-slate-900 mb-4">
+          <h2 className="text-2xl sm:text-3xl font-bold text-slate-900 mb-4 animate-fade-in-up">
             Frequently Asked Questions
           </h2>
-          <p className="text-slate-600">
+          <p className="text-slate-600 animate-fade-in-up" style={{ animationDelay: "100ms" }}>
             Got questions? {"We've"} got answers.
           </p>
         </div>
@@ -39,7 +39,8 @@ export function FAQSection() {
             <AccordionItem 
               key={faq.id} 
               value={faq.id}
-              className="bg-white border border-slate-200 rounded-lg px-6 data-[state=open]:shadow-md transition-shadow"
+              className="bg-white border border-slate-200 rounded-lg px-6 data-[state=open]:shadow-md transition-shadow animate-fade-in-up"
+              style={{ animationDelay: `${200 + index * 75}ms` }}
             >
               <AccordionTrigger className="text-left text-slate-900 font-medium hover:no-underline py-4">
                 {faq.question}

@@ -25,22 +25,23 @@ export function GuaranteeSection() {
     <section className="bg-slate-50 py-16 md:py-24">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-12">
-          <h2 className="text-2xl sm:text-3xl font-bold text-slate-900 mb-4">
+          <h2 className="text-2xl sm:text-3xl font-bold text-slate-900 mb-4 animate-fade-in-up">
             Our Guarantees to You
           </h2>
-          <p className="text-slate-600 max-w-2xl mx-auto">
+          <p className="text-slate-600 max-w-2xl mx-auto animate-fade-in-up" style={{ animationDelay: "100ms" }}>
             We stand behind our work. Period. {"Here's"} our promise to every customer.
           </p>
         </div>
 
         <div className="grid md:grid-cols-3 gap-6">
-          {guarantees.map((guarantee) => (
+          {guarantees.map((guarantee, index) => (
             <Card 
               key={guarantee.title}
-              className="bg-white border-slate-200 shadow-sm text-center"
+              className="bg-white border-slate-200 shadow-sm text-center animate-slide-in-left"
+              style={{ animationDelay: `${index * 150}ms` }}
             >
               <CardContent className="pt-8 pb-8">
-                <div className="w-16 h-16 bg-orange-500 rounded-2xl flex items-center justify-center mx-auto mb-4">
+                <div className="w-16 h-16 bg-orange-500 rounded-2xl flex items-center justify-center mx-auto mb-4 group-hover:animate-glow">
                   <guarantee.icon className="w-8 h-8 text-white" />
                 </div>
                 <h3 className="text-xl font-semibold text-slate-900 mb-2">

@@ -8,12 +8,12 @@ export function SocialProof() {
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Stats Row */}
         <div className="flex flex-col sm:flex-row justify-center items-center gap-8 sm:gap-16 mb-12">
-          <div className="text-center">
+          <div className="text-center animate-fade-in-up" style={{ animationDelay: "0ms" }}>
             <p className="text-4xl sm:text-5xl font-bold text-white mb-2">2,847</p>
             <p className="text-slate-400">Chicago families served this year</p>
           </div>
           <div className="hidden sm:block w-px h-16 bg-slate-700" />
-          <div className="text-center">
+          <div className="text-center animate-fade-in-up" style={{ animationDelay: "100ms" }}>
             <div className="flex items-center justify-center gap-1 mb-2">
               <span className="text-4xl sm:text-5xl font-bold text-white">4.9</span>
               <Star className="w-8 h-8 text-orange-500 fill-orange-500" />
@@ -24,17 +24,18 @@ export function SocialProof() {
 
         {/* Section Header */}
         <div className="text-center mb-10">
-          <h2 className="text-2xl sm:text-3xl font-bold text-white mb-4">
+          <h2 className="text-2xl sm:text-3xl font-bold text-white mb-4 animate-fade-in-up">
             What Our Customers Say
           </h2>
         </div>
 
         {/* Testimonials Grid */}
         <div className="grid md:grid-cols-3 gap-6">
-          {TESTIMONIALS.map((testimonial) => (
+          {TESTIMONIALS.map((testimonial, index) => (
             <Card 
               key={testimonial.id}
-              className="bg-slate-800 border-slate-700"
+              className="bg-slate-800 border-slate-700 animate-scale-in"
+              style={{ animationDelay: `${index * 100}ms` }}
             >
               <CardContent className="pt-6">
                 <Quote className="w-8 h-8 text-blue-500 mb-4 opacity-50" />
