@@ -41,34 +41,32 @@ export function SocialProof() {
         <div className="grid md:grid-cols-3 gap-6">
           {TESTIMONIALS.map((testimonial, index) => (
             <ExpandIn key={testimonial.id} delay={index * 0.1}>
-              <Card className="bg-slate-800 border-slate-700 h-full">
-                <CardContent className="pt-6">
-                  {/* Customer Image */}
-                  {testimonial.image && (
-                    <div className="mb-6 flex justify-center">
-                      <div className="relative w-24 h-24 rounded-full overflow-hidden border-2 border-blue-500">
-                        <Image
-                          src={testimonial.image}
-                          alt={testimonial.author}
-                          fill
-                          className="object-cover"
-                          crossOrigin="anonymous"
-                        />
-                      </div>
-                    </div>
-                  )}
-                  
-                  <Quote className="w-8 h-8 text-blue-500 mb-4 opacity-50" />
-                  <p className="text-slate-300 mb-4 leading-relaxed">
+              <Card className="bg-slate-800 border-slate-700 h-full overflow-hidden">
+                {/* Customer Image - Full Width Top */}
+                {testimonial.image && (
+                  <div className="relative w-full h-64 -mx-0 -mt-0 mb-4">
+                    <Image
+                      src={testimonial.image}
+                      alt={testimonial.author}
+                      fill
+                      className="object-cover"
+                      crossOrigin="anonymous"
+                    />
+                  </div>
+                )}
+                
+                <CardContent className="pt-0">
+                  <Quote className="w-8 h-8 text-blue-500 mb-3 opacity-50" />
+                  <p className="text-slate-300 mb-4 leading-relaxed text-sm">
                     {`"${testimonial.quote}"`}
                   </p>
-                  <div className="flex items-center gap-1 mb-2">
+                  <div className="flex items-center gap-1 mb-3">
                     {[...Array(5)].map((_, i) => (
-                      <Star key={i} className="w-4 h-4 text-orange-500 fill-orange-500" />
+                      <Star key={i} className="w-3 h-3 text-orange-500 fill-orange-500" />
                     ))}
                   </div>
-                  <p className="text-white font-medium text-center">{testimonial.author}</p>
-                  <p className="text-slate-500 text-sm text-center">{testimonial.location}</p>
+                  <p className="text-white font-medium text-center text-sm">{testimonial.author}</p>
+                  <p className="text-slate-500 text-xs text-center">{testimonial.location}</p>
                 </CardContent>
               </Card>
             </ExpandIn>
