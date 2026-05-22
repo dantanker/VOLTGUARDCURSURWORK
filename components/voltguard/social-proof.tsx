@@ -45,8 +45,8 @@ export function SocialProof() {
                 <CardContent className="pt-6">
                   {/* Customer Image */}
                   {testimonial.image && (
-                    <div className="mb-4 flex justify-center">
-                      <div className="relative w-16 h-16 rounded-full overflow-hidden border-2 border-blue-500">
+                    <div className="mb-6 flex justify-center">
+                      <div className="relative w-24 h-24 rounded-full overflow-hidden border-2 border-blue-500">
                         <Image
                           src={testimonial.image}
                           alt={testimonial.author}
