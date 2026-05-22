@@ -93,18 +93,21 @@ export const TESTIMONIALS = [
     quote: "They came in 30 minutes and fixed our panel. Professional and kind.",
     author: "Sarah M.",
     location: "Arlington Heights",
+    image: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/review-sarah.jpg-yQageAXh3riKpJgJkYUu01Yo1bXMZt.png",
   },
   {
     id: 2,
     quote: "Finally, an electrician who explained everything in plain English.",
     author: "Mark D.",
     location: "Schaumburg",
+    image: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/review-mark.jpg-N1TR88RTTs2Z6q07dS3HBn7D943Kka.png",
   },
   {
     id: 3,
     quote: "Worth every penny. They found a dangerous wiring issue others missed.",
     author: "Lisa K.",
     location: "Palatine",
+    image: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/review-lisa%20%281%29.jpg-lg1eJEyMr1MoliaYsvv307Cz1TWhOw.png",
   },
 ]
 

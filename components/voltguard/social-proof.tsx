@@ -2,6 +2,7 @@ import { Star, Quote } from "lucide-react"
 import { Card, CardContent } from "@/components/ui/card"
 import { TESTIMONIALS } from "@/lib/constants"
 import { FadeInUp, ExpandIn } from "@/lib/scroll-animations"
+import Image from "next/image"
 
 export function SocialProof() {
   return (
@@ -42,6 +43,21 @@ export function SocialProof() {
             <ExpandIn key={testimonial.id} delay={index * 0.1}>
               <Card className="bg-slate-800 border-slate-700 h-full">
                 <CardContent className="pt-6">
+                  {/* Customer Image */}
+                  {testimonial.image && (
+                    <div className="mb-4 flex justify-center">
+                      <div className="relative w-16 h-16 rounded-full overflow-hidden border-2 border-blue-500">
+                        <Image
+                          src={testimonial.image}
+                          alt={testimonial.author}
+                          fill
+                          className="object-cover"
+                          crossOrigin="anonymous"
+                        />
+                      </div>
+                    </div>
+                  )}
+                  
                   <Quote className="w-8 h-8 text-blue-500 mb-4 opacity-50" />
                   <p className="text-slate-300 mb-4 leading-relaxed">
                     {`"${testimonial.quote}"`}
@@ -51,8 +67,8 @@ export function SocialProof() {
                       <Star key={i} className="w-4 h-4 text-orange-500 fill-orange-500" />
                     ))}
                   </div>
-                  <p className="text-white font-medium">{testimonial.author}</p>
-                  <p className="text-slate-500 text-sm">{testimonial.location}</p>
+                  <p className="text-white font-medium text-center">{testimonial.author}</p>
+                  <p className="text-slate-500 text-sm text-center">{testimonial.location}</p>
                 </CardContent>
               </Card>
             </ExpandIn>
