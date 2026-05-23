@@ -68,13 +68,13 @@ export function Footer() {
         <div className="grid md:grid-cols-3 gap-8 mb-12">
           {/* Logo & Description */}
           <div>
-            <div className="mb-4">
+            <div className="mb-6">
               <Image
                 src="/voltguard-logo-white-no-tagline.png"
                 alt="VoltGuard Electrical"
-                width={160}
-                height={48}
-                className="h-10 w-auto object-contain"
+                width={380}
+                height={112}
+                className="h-24 w-auto object-contain"
               />
             </div>
             <p className="text-slate-400 text-sm leading-relaxed">

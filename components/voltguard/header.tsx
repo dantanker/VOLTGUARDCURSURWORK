@@ -49,7 +49,7 @@ export function Header() {
       }`}
     >
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-16 md:h-20">
+        <div className="flex items-center justify-between h-auto md:h-auto py-3 md:py-4">
           {/* Logo */}
           <button
             onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
@@ -59,9 +59,9 @@ export function Header() {
             <Image
               src="/voltguard-logo-white-no-tagline.png"
               alt="VoltGuard Electrical"
-              width={160}
-              height={48}
-              className="h-10 w-auto object-contain"
+              width={420}
+              height={128}
+              className="h-28 w-auto object-contain"
               priority
             />
           </button>
