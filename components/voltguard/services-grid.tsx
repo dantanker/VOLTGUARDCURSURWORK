@@ -10,7 +10,7 @@ export function ServicesGrid() {
       id="services"
       className="relative scroll-mt-20 overflow-hidden"
     >
-      <div className="relative z-10 max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pt-12 md:pt-14 pb-2 md:pb-3">
+      <div className="relative z-10 max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pt-4 md:pt-5 pb-2 md:pb-3">
         <div className="text-center">
           <FadeInUp delay={0}>
             <p className="text-sm font-semibold uppercase tracking-widest text-orange-500 mb-2">

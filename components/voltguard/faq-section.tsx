@@ -19,7 +19,7 @@ export function FAQSection() {
   }
 
   return (
-    <section id="faq" className="relative py-16 md:py-24 scroll-mt-20">
+    <section id="faq" className="relative pt-6 md:pt-8 pb-16 md:pb-24 scroll-mt-20">
       <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <div className="text-center mb-12">
           <FadeInUp delay={0}>

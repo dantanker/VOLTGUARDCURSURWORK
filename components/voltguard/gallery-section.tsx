@@ -1,6 +1,7 @@
 "use client"
 
 import { ImageComparison } from "@/components/ImageComparison"
+import { ZoomParallax } from "@/components/ZoomParallax"
 import { ShinyHeading } from "@/components/ShinyText"
 import { FadeInUp } from "@/lib/scroll-animations"
 
@@ -30,6 +31,37 @@ const GALLERY_ITEMS = [
       src: "/gallery/panel-after.png",
       alt: "Modern smart electrical panel with organized wiring after upgrade",
     },
+  },
+] as const
+
+const PARALLAX_IMAGES = [
+  {
+    src: "/gallery/parallax/van.png",
+    alt: "VoltGuard company van — Power Done Right",
+  },
+  {
+    src: "/gallery/parallax/industrial.png",
+    alt: "Industrial electrical conduit and panel installation in a warehouse",
+  },
+  {
+    src: "/gallery/parallax/office.png",
+    alt: "Commercial office lighting installation with city views at night",
+  },
+  {
+    src: "/gallery/parallax/kitchen-lighting.png",
+    alt: "Residential kitchen recessed and under-cabinet lighting",
+  },
+  {
+    src: "/gallery/parallax/panel.png",
+    alt: "Neatly wired residential electrical panel in a garage",
+  },
+  {
+    src: "/gallery/parallax/ev-charger.png",
+    alt: "EV charger installation in a residential garage",
+  },
+  {
+    src: "/gallery/parallax/commercial-kitchen.png",
+    alt: "Commercial kitchen electrical outlet and conduit work",
   },
 ] as const
 
@@ -102,6 +134,10 @@ export function GallerySection() {
             />
           ))}
         </div>
+      </div>
+
+      <div className="mt-6 md:mt-8">
+        <ZoomParallax images={[...PARALLAX_IMAGES]} />
       </div>
     </section>
   )
