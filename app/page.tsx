@@ -4,6 +4,7 @@ import { FeaturesMatrix } from "@/components/voltguard/features-matrix"
 import { SocialProof } from "@/components/voltguard/social-proof"
 import { ServiceAreaSection } from "@/components/voltguard/service-area-section"
 import { ServicesGrid } from "@/components/voltguard/services-grid"
+import { GallerySection } from "@/components/voltguard/gallery-section"
 import { FAQSection } from "@/components/voltguard/faq-section"
 import { Footer } from "@/components/voltguard/footer"
 import { AnimatedDarkBackground } from "@/components/AnimatedDarkBackground"
@@ -17,6 +18,7 @@ export default function Home() {
         <HeroSection />
         <FeaturesMatrix />
         <ServicesGrid />
+        <GallerySection />
         <SocialProof />
         <ServiceAreaSection />
         <FAQSection />

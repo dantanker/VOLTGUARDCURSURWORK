@@ -17,14 +17,14 @@ export function FeaturesMatrix() {
           </FadeInUp>
           <FadeInUp delay={0.1}>
             <p className="text-slate-300 max-w-2xl mx-auto">
-              From commercial power systems to smart home upgrades — over 20 years
-              of safe, professional electrical work across Chicagoland.
+              From complex commercial grids to precision smart home upgrades, we don&apos;t
+              just fix wiring. We future-proof your infrastructure,
             </p>
           </FadeInUp>
         </div>
 
         <FadeInUp delay={0.15}>
-          <div id="gallery" className="scroll-mt-20">
+          <div className="scroll-mt-20">
             <WhyUsAccordion />
           </div>
         </FadeInUp>

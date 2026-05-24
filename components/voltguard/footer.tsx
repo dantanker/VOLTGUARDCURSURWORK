@@ -142,10 +142,10 @@ export function Footer() {
                 className="h-11 w-auto object-contain mb-2"
               />
               <p className="text-sm font-semibold text-white mb-0.5">{SITE_HEADLINE}</p>
-              <p className="text-xs text-slate-400 leading-snug mb-2 max-w-[220px]">
+              <p className="text-xs text-slate-400 leading-snug mb-0 max-w-[220px]">
                 {SITE_SUBHEADLINE}
               </p>
-              <div className="flex flex-wrap gap-1">
+              <div className="mt-5 flex flex-wrap gap-1">
                 {SOCIAL_LINKS.map((social) => (
                   <a
                     key={social.label}

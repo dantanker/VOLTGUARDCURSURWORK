@@ -122,7 +122,7 @@ function ReviewStats({ compact = false }: { compact?: boolean }) {
 
 export function SocialProof() {
   return (
-    <section id="testimonials" className="relative py-10 md:py-14 lg:py-16">
+    <section id="testimonials" className="relative pt-4 md:pt-6 pb-10 md:pb-14 lg:pb-16">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Desktop */}
         <div className="hidden lg:block">

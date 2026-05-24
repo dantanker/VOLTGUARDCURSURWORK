@@ -171,7 +171,7 @@ export function ServicesArcGallery() {
     >
       <div
         ref={trackRef}
-        className="flex h-full items-start gap-7 py-6 md:py-10 will-change-transform"
+        className="flex h-full items-start gap-7 py-3 md:py-4 will-change-transform"
         style={{
           width: "max-content",
           paddingLeft: `calc(50% - ${CARD_WIDTH / 2}px)`,
