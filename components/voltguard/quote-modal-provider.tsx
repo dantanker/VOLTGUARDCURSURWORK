@@ -101,7 +101,7 @@ const SHIELD_PATH =
   "M 260 22 L 482 90 L 482 355 Q 482 525 260 648 Q 38 525 38 355 L 38 90 Z"
 
 const labelClass =
-  "block text-center text-xs font-semibold uppercase tracking-[0.12em] text-slate-400 sm:text-[10px]"
+  "block text-center text-[10px] font-semibold uppercase tracking-[0.12em] text-slate-400"
 
 function FieldGroup({
   label,
@@ -119,7 +119,7 @@ function FieldGroup({
   className?: string
 }) {
   return (
-    <div className={cn("w-full space-y-1.5", className)}>
+    <div className={cn("w-full space-y-1", className)}>
       <label htmlFor={htmlFor} className={labelClass}>
         {label}
       </label>
@@ -127,14 +127,14 @@ function FieldGroup({
       {message ? (
         <p
           className={cn(
-            "flex items-center justify-center gap-1 text-center text-xs leading-tight sm:text-[10px]",
+            "flex items-center justify-center gap-1 text-center text-[10px] leading-tight",
             messageTone === "success" ? "text-green-400" : "text-red-400"
           )}
         >
           {messageTone === "error" ? (
-            <AlertCircle className="h-3.5 w-3.5 shrink-0 sm:h-3 sm:w-3" />
+            <AlertCircle className="h-3 w-3 shrink-0" />
           ) : (
-            <CheckCircle className="h-3.5 w-3.5 shrink-0 sm:h-3 sm:w-3" />
+            <CheckCircle className="h-3 w-3 shrink-0" />
           )}
           {message}
         </p>
@@ -290,7 +290,7 @@ function QuoteShieldForm({ onSuccess }: { onSuccess: (confirmation: string) => v
 
   const fieldClass = (field: keyof FormState, success?: boolean) =>
     cn(
-      "h-11 w-full rounded-md bg-slate-950/70 text-center text-base text-white sm:h-9 sm:text-sm",
+      "h-10 w-full rounded-md bg-slate-950/70 text-center text-sm text-white sm:h-9",
       "border border-slate-600/70 placeholder:text-slate-500",
       "focus-visible:border-orange-500/70 focus-visible:ring-2 focus-visible:ring-orange-500/15",
       errors[field] && touched[field] && "border-red-500/70",
@@ -310,7 +310,7 @@ function QuoteShieldForm({ onSuccess }: { onSuccess: (confirmation: string) => v
     <form
       id={formId}
       onSubmit={handleSubmit}
-      className="mx-auto w-full max-w-[340px]"
+      className="mx-auto w-full max-w-[280px] sm:max-w-[340px]"
     >
       <FieldGroup
         label="Name"
@@ -332,10 +332,10 @@ function QuoteShieldForm({ onSuccess }: { onSuccess: (confirmation: string) => v
         />
       </FieldGroup>
 
-      <div className="mt-2 flex flex-col gap-3">
-      <div className="grid grid-cols-1 gap-3 sm:grid-cols-[minmax(0,1fr)_92px] sm:gap-2.5">
+      <div className="mt-2 flex flex-col gap-2 sm:mt-2 sm:gap-3">
+      <div className="grid grid-cols-[minmax(0,1fr)_84px] gap-2 sm:grid-cols-[minmax(0,1fr)_92px] sm:gap-2.5">
         <FieldGroup
-          label="Phone Number"
+          label="Phone"
           htmlFor="quote-phone"
           message={errors.phone && touched.phone ? errors.phone : undefined}
         >
@@ -356,7 +356,7 @@ function QuoteShieldForm({ onSuccess }: { onSuccess: (confirmation: string) => v
         </FieldGroup>
 
         <FieldGroup
-          label="ZIP Code"
+          label="ZIP"
           htmlFor="quote-zip"
           message={
             zipValid
@@ -444,11 +444,11 @@ function QuoteShieldForm({ onSuccess }: { onSuccess: (confirmation: string) => v
         </FieldGroup>
       )}
 
-      <div className="flex flex-col items-center border-t border-slate-700/40 pt-2.5">
+      <div className="flex flex-col items-center border-t border-slate-700/40 pt-2">
         <SpotlightButton
           type="submit"
           disabled={isSubmitting}
-          className="w-full max-w-[280px] py-3 px-4 shadow-lg shadow-orange-500/20 sm:w-[240px] sm:py-2.5"
+          className="w-full max-w-[220px] py-2.5 px-3 shadow-lg shadow-orange-500/20 sm:max-w-[240px] sm:px-4"
         >
           {isSubmitting ? (
             <>
@@ -456,12 +456,15 @@ function QuoteShieldForm({ onSuccess }: { onSuccess: (confirmation: string) => v
               <SpotlightButtonLabel className="text-sm">Sending...</SpotlightButtonLabel>
             </>
           ) : (
-            <SpotlightButtonLabel className="text-sm">Request My Free Quote</SpotlightButtonLabel>
+            <SpotlightButtonLabel className="text-sm whitespace-nowrap">
+              <span className="sm:hidden">Get Free Quote</span>
+              <span className="hidden sm:inline">Request My Free Quote</span>
+            </SpotlightButtonLabel>
           )}
         </SpotlightButton>
 
-        <p className="mt-2 text-center text-xs leading-snug text-slate-500 sm:mt-1.5 sm:text-[10px]">
-          No credit card required · We&apos;ll call within 15 minutes
+        <p className="mt-1.5 max-w-[200px] text-center text-[10px] leading-snug text-slate-500 sm:max-w-none">
+          No credit card · Call within 15 min
         </p>
       </div>
       </div>
@@ -497,7 +500,7 @@ function QuoteModalContent({
         <DialogPrimitive.Overlay className="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-sm data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0" />
         <DialogPrimitive.Content
           className={cn(
-            "fixed left-1/2 top-1/2 z-50 w-[min(94vw,480px)] -translate-x-1/2 -translate-y-1/2",
+            "fixed left-1/2 top-1/2 z-50 w-[min(92vw,480px)] -translate-x-1/2 -translate-y-1/2",
             "border-0 bg-transparent p-0 shadow-none outline-none",
             "data-[state=open]:animate-in data-[state=closed]:animate-out",
             "data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0",
@@ -508,7 +511,7 @@ function QuoteModalContent({
         >
           <ShieldBackdrop />
 
-          <div className="relative mx-auto w-[min(94vw,480px)] aspect-[520/680]">
+          <div className="relative mx-auto h-[min(88dvh,36rem)] w-[min(92vw,22rem)] sm:h-auto sm:w-[min(94vw,480px)] sm:aspect-[520/680]">
               <div
                 className="pointer-events-none absolute inset-0 opacity-50 blur-2xl"
                 style={{
@@ -547,27 +550,28 @@ function QuoteModalContent({
               </div>
 
               <div
-                className="relative z-10 flex h-full flex-col overflow-hidden px-8 pb-11 pt-11 sm:px-10 sm:pb-12 sm:pt-12"
+                className="relative z-10 flex h-full flex-col overflow-hidden px-7 pb-14 pt-12 sm:px-10 sm:pb-12 sm:pt-12"
                 style={{ clipPath: `url(#${SHIELD_CLIP_ID})` }}
               >
-                <DialogPrimitive.Close className="absolute right-3 top-3 z-20 inline-flex h-11 w-11 items-center justify-center rounded-full border border-slate-600/60 bg-slate-900/90 text-slate-300 transition-colors hover:border-orange-500/50 hover:text-white focus:outline-none focus:ring-2 focus:ring-orange-500/40 sm:right-4 sm:top-4 sm:h-auto sm:w-auto sm:p-1.5">
-                  <X className="h-5 w-5 sm:h-4 sm:w-4" />
+                <DialogPrimitive.Close className="absolute right-2.5 top-2.5 z-20 inline-flex h-10 w-10 items-center justify-center rounded-full border border-slate-600/60 bg-slate-900/90 text-slate-300 transition-colors hover:border-orange-500/50 hover:text-white focus:outline-none focus:ring-2 focus:ring-orange-500/40 sm:right-4 sm:top-4 sm:h-auto sm:w-auto sm:p-1.5">
+                  <X className="h-4 w-4" />
                   <span className="sr-only">Close</span>
                 </DialogPrimitive.Close>
 
                 {!submitted ? (
                   <>
-                    <div className="mb-5 mt-3 shrink-0 text-center sm:mt-4">
-                      <DialogPrimitive.Title className="bg-gradient-to-b from-white to-slate-300 bg-clip-text text-xl font-bold text-transparent sm:text-xl">
-                        {CTA_LABEL}
+                    <div className="mb-3 shrink-0 text-center sm:mb-5 sm:mt-4">
+                      <DialogPrimitive.Title className="bg-gradient-to-b from-white to-slate-300 bg-clip-text px-1 text-base font-bold leading-snug text-transparent sm:text-xl sm:leading-tight">
+                        <span className="sm:hidden">Get Your Free Quote</span>
+                        <span className="hidden sm:inline">{CTA_LABEL}</span>
                       </DialogPrimitive.Title>
-                      <p className="mx-auto mt-1.5 max-w-[260px] text-sm leading-relaxed text-slate-400 sm:text-xs">
-                        Protected by VoltGuard — tell us what you need.
+                      <p className="mx-auto mt-1 max-w-[200px] text-[11px] leading-snug text-slate-400 sm:mt-1.5 sm:max-w-[260px] sm:text-xs sm:leading-relaxed">
+                        Tell us what you need — we&apos;ll call you back.
                       </p>
-                      <div className="mx-auto mt-2.5 h-px w-14 bg-gradient-to-r from-transparent via-orange-500/50 to-transparent" />
+                      <div className="mx-auto mt-2 h-px w-12 bg-gradient-to-r from-transparent via-orange-500/50 to-transparent sm:mt-2.5 sm:w-14" />
                     </div>
 
-                    <div className="flex min-h-0 flex-1 flex-col justify-start overflow-y-auto overscroll-contain pt-3 [scrollbar-width:thin] [scrollbar-color:rgba(249,115,22,0.35)_transparent]">
+                    <div className="flex min-h-0 flex-1 flex-col justify-start overflow-y-auto overscroll-contain px-0.5 pt-1 sm:pt-3 [scrollbar-width:thin] [scrollbar-color:rgba(249,115,22,0.35)_transparent]">
                       <QuoteShieldForm
                         onSuccess={(num) => {
                           setConfirmation(num)
@@ -587,7 +591,7 @@ function QuoteModalContent({
                       <CheckCircle className="h-8 w-8 text-green-400" />
                     </div>
                     <h3 className="text-xl font-bold text-white sm:text-2xl">You&apos;re covered!</h3>
-                    <p className="mt-2 max-w-[260px] text-xs leading-relaxed text-slate-300 sm:text-sm">
+                    <p className="mt-2 max-w-[220px] text-xs leading-relaxed text-slate-300 sm:max-w-[260px] sm:text-sm">
                       A VoltGuard technician will call you within 15 minutes with your free quote.
                     </p>
                     <div className="mt-4 rounded-xl border border-slate-700/70 bg-slate-950/60 px-4 py-2.5">
