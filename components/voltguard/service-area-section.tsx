@@ -21,10 +21,10 @@ export function ServiceAreaSection() {
       <div className="relative z-10 max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-5 md:mb-6">
           <FadeInUp delay={0}>
-            <p className="text-sm font-semibold uppercase tracking-widest text-orange-500 mb-2">
+            <p className="mb-2 hidden text-sm font-semibold uppercase tracking-widest text-orange-500 md:block">
               VoltGuard Protected
             </p>
-            <h2 className="mb-4">
+            <h2 className="mb-3 md:mb-4">
               <ShinyHeading
                 text="Our Service Area"
                 className="text-2xl sm:text-3xl md:text-4xl font-bold"
@@ -32,7 +32,7 @@ export function ServiceAreaSection() {
             </h2>
           </FadeInUp>
           <FadeInUp delay={0.1}>
-            <p className="text-slate-300 max-w-2xl mx-auto text-base sm:text-lg">
+            <p className="mx-auto hidden max-w-2xl text-base text-slate-300 sm:text-lg md:block">
               Trusted electrical service across Chicago&apos;s northwest suburbs where our
               shield of protection covers your home and business.
             </p>

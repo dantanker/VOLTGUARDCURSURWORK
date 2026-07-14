@@ -69,6 +69,8 @@ export function ServicesArcGallery() {
   const rafId = useRef(0)
   const activePointerId = useRef<number | null>(null)
   const snapPending = useRef(false)
+  const isVisibleRef = useRef(true)
+  const startLoopRef = useRef<() => void>(() => {})
 
   const normalizeScroll = useCallback(() => {
     const { setWidth } = layoutRef.current
@@ -99,9 +101,11 @@ export function ServicesArcGallery() {
     const containerWidth = container.clientWidth
     const centerX = containerWidth / 2
     const paddingLeft = centerX - cardWidth / 2
-    const rotateAmount = isMobile ? 7 : 12
-    const arcAmount = isMobile ? -16 : -28
-    const scaleAmount = isMobile ? 0.05 : 0.08
+
+    // Lighter transforms on phone — cheaper while scrolling the page nearby
+    const rotateAmount = isMobile ? 4 : 12
+    const arcAmount = isMobile ? -10 : -28
+    const scaleAmount = isMobile ? 0.03 : 0.08
 
     cardsRef.current.forEach((card, index) => {
       if (!card) return
@@ -160,48 +164,89 @@ export function ServicesArcGallery() {
 
     const ro = new ResizeObserver(sync)
     ro.observe(container)
-    return () => ro.disconnect()
+
+    const io = new IntersectionObserver(
+      ([entry]) => {
+        isVisibleRef.current = entry.isIntersecting
+        if (!entry.isIntersecting && rafId.current) {
+          cancelAnimationFrame(rafId.current)
+          rafId.current = 0
+        }
+      },
+      { rootMargin: "80px 0px" }
+    )
+    io.observe(container)
+
+    return () => {
+      ro.disconnect()
+      io.disconnect()
+    }
   }, [applyLayout])
 
   useEffect(() => {
-    lastFrameTime.current = performance.now()
+    const startLoop = () => {
+      if (rafId.current || !isVisibleRef.current) return
+      lastFrameTime.current = performance.now()
 
-    const tick = (now: number) => {
-      const dt = Math.min(Math.max((now - lastFrameTime.current) / 1000, 0), 0.032)
-      lastFrameTime.current = now
-      const { isMobile } = layoutRef.current
-
-      if (!isDragging.current) {
-        const stopThreshold = isMobile ? 0.04 : 0.02
-        const friction = isMobile ? 4.2 : 3.2
-
-        if (Math.abs(velocity.current) > stopThreshold) {
-          targetX.current += velocity.current * (dt * 1000)
-          velocity.current *= Math.exp(-friction * dt)
-          if (isMobile && Math.abs(velocity.current) <= stopThreshold * 2) {
-            snapPending.current = true
-          }
-        } else {
-          velocity.current = 0
-          if (isMobile && snapPending.current) {
-            snapToNearest()
-          }
+      const tick = (now: number) => {
+        if (!isVisibleRef.current && !isDragging.current) {
+          rafId.current = 0
+          return
         }
 
-        // Mobile eases a bit more for buttery settle into snap
-        const follow = isMobile ? 18 : 14
-        currentX.current = damp(currentX.current, targetX.current, follow, dt)
-      } else {
-        currentX.current = targetX.current
+        const dt = Math.min(Math.max((now - lastFrameTime.current) / 1000, 0), 0.032)
+        lastFrameTime.current = now
+        const { isMobile } = layoutRef.current
+
+        if (!isDragging.current) {
+          const stopThreshold = isMobile ? 0.04 : 0.02
+          const friction = isMobile ? 4.2 : 3.2
+
+          if (Math.abs(velocity.current) > stopThreshold) {
+            targetX.current += velocity.current * (dt * 1000)
+            velocity.current *= Math.exp(-friction * dt)
+            if (isMobile && Math.abs(velocity.current) <= stopThreshold * 2) {
+              snapPending.current = true
+            }
+          } else {
+            velocity.current = 0
+            if (isMobile && snapPending.current) {
+              snapToNearest()
+            }
+          }
+
+          const follow = isMobile ? 18 : 14
+          currentX.current = damp(currentX.current, targetX.current, follow, dt)
+        } else {
+          currentX.current = targetX.current
+        }
+
+        normalizeScroll()
+        applyTrackPosition(currentX.current)
+
+        const settled =
+          !isDragging.current &&
+          Math.abs(velocity.current) < (layoutRef.current.isMobile ? 0.04 : 0.02) &&
+          Math.abs(currentX.current - targetX.current) < 0.4
+
+        if (settled) {
+          rafId.current = 0
+          return
+        }
+
+        rafId.current = requestAnimationFrame(tick)
       }
 
-      normalizeScroll()
-      applyTrackPosition(currentX.current)
       rafId.current = requestAnimationFrame(tick)
     }
 
-    rafId.current = requestAnimationFrame(tick)
-    return () => cancelAnimationFrame(rafId.current)
+    startLoopRef.current = startLoop
+    startLoop()
+
+    return () => {
+      if (rafId.current) cancelAnimationFrame(rafId.current)
+      rafId.current = 0
+    }
   }, [applyTrackPosition, normalizeScroll, snapToNearest])
 
   const endDrag = (e: React.PointerEvent) => {
@@ -230,18 +275,18 @@ export function ServicesArcGallery() {
     velocity.current = Math.max(-maxVel, Math.min(maxVel, velocity.current))
 
     if (isMobile) {
-      // Nudge toward next/prev card if fling was decisive, then soft-snap
       if (Math.abs(velocity.current) > 0.35) {
         const direction = velocity.current > 0 ? 1 : -1
         targetX.current =
           Math.round(targetX.current / stride + direction * 0.25) * stride
       }
       snapPending.current = true
-      // If almost stopped already, snap immediately
       if (Math.abs(velocity.current) < 0.12) {
         snapToNearest()
       }
     }
+
+    startLoopRef.current()
   }
 
   const onPointerDown = (e: React.PointerEvent) => {
@@ -272,7 +317,8 @@ export function ServicesArcGallery() {
       const slop = 6
       if (Math.abs(dxTotal) < slop && Math.abs(dyTotal) < slop) return
 
-      if (Math.abs(dyTotal) > Math.abs(dxTotal) * 1.15) {
+      // Prefer vertical page scroll unless clearly horizontal
+      if (Math.abs(dyTotal) > Math.abs(dxTotal) * 0.85) {
         isPointerDown.current = false
         activePointerId.current = null
         return
@@ -305,6 +351,7 @@ export function ServicesArcGallery() {
     currentX.current = targetX.current
     normalizeScroll()
     applyTrackPosition(currentX.current)
+    startLoopRef.current()
   }
 
   const onWheel = (e: React.WheelEvent) => {
@@ -316,6 +363,7 @@ export function ServicesArcGallery() {
     targetX.current += delta
     velocity.current = delta * 0.03
     snapPending.current = layoutRef.current.isMobile
+    startLoopRef.current()
   }
 
   const { cardWidth, gap, isMobile } = layout
@@ -324,7 +372,7 @@ export function ServicesArcGallery() {
     <div
       ref={containerRef}
       className="services-arc-gallery relative w-full h-full overflow-hidden cursor-grab active:cursor-grabbing select-none"
-      style={{ touchAction: "pan-y" }}
+      style={{ touchAction: "pan-y", overscrollBehaviorX: "contain" }}
       onPointerDown={onPointerDown}
       onPointerMove={onPointerMove}
       onPointerUp={endDrag}

@@ -3,6 +3,10 @@
 
 @custom-variant dark (&:is(.dark *));
 
+html {
+  -webkit-text-size-adjust: 100%;
+}
+
 :root {
   --background: oklch(1 0 0);
   --foreground: oklch(0.145 0 0);
@@ -242,6 +246,28 @@
   filter: blur(72px);
   opacity: 0.65;
   will-change: transform;
+}
+
+@media (max-width: 767px) {
+  .animated-dark-bg__orb {
+    display: none;
+  }
+
+  .animated-dark-bg__mesh {
+    animation: none !important;
+  }
+
+  .partner-marquee-track {
+    animation-duration: 70s;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animated-dark-bg__orb,
+  .animated-dark-bg__mesh,
+  .partner-marquee-track {
+    animation: none !important;
+  }
 }
 
 .animated-dark-bg__orb--1 {

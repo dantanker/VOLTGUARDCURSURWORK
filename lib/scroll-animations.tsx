@@ -7,10 +7,10 @@ import { ReactNode } from "react"
 export function FadeInUp({ children, delay = 0 }: { children: ReactNode; delay?: number }) {
   return (
     <motion.div
-      initial={{ opacity: 0, y: 40 }}
+      initial={{ opacity: 0, y: 24 }}
       whileInView={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.6, delay }}
-      viewport={{ once: true, amount: 0.3 }}
+      transition={{ duration: 0.45, delay }}
+      viewport={{ once: true, amount: 0.15, margin: "0px 0px -40px 0px" }}
     >
       {children}
     </motion.div>
@@ -21,10 +21,10 @@ export function FadeInUp({ children, delay = 0 }: { children: ReactNode; delay?:
 export function SlideInLeft({ children, delay = 0 }: { children: ReactNode; delay?: number }) {
   return (
     <motion.div
-      initial={{ opacity: 0, x: -60 }}
+      initial={{ opacity: 0, x: -32 }}
       whileInView={{ opacity: 1, x: 0 }}
-      transition={{ duration: 0.7, delay }}
-      viewport={{ once: true, amount: 0.3 }}
+      transition={{ duration: 0.5, delay }}
+      viewport={{ once: true, amount: 0.15, margin: "0px 0px -40px 0px" }}
     >
       {children}
     </motion.div>
@@ -35,10 +35,10 @@ export function SlideInLeft({ children, delay = 0 }: { children: ReactNode; dela
 export function SlideInRight({ children, delay = 0 }: { children: ReactNode; delay?: number }) {
   return (
     <motion.div
-      initial={{ opacity: 0, x: 60 }}
+      initial={{ opacity: 0, x: 32 }}
       whileInView={{ opacity: 1, x: 0 }}
-      transition={{ duration: 0.7, delay }}
-      viewport={{ once: true, amount: 0.3 }}
+      transition={{ duration: 0.5, delay }}
+      viewport={{ once: true, amount: 0.15, margin: "0px 0px -40px 0px" }}
     >
       {children}
     </motion.div>
@@ -111,14 +111,14 @@ export function StaggerItem({ children }: { children: ReactNode }) {
   )
 }
 
-// Blur fade in (more subtle)
+// Blur fade in — opacity only (filter blur is expensive on mobile scroll)
 export function BlurIn({ children, delay = 0 }: { children: ReactNode; delay?: number }) {
   return (
     <motion.div
-      initial={{ opacity: 0, filter: "blur(10px)" }}
-      whileInView={{ opacity: 1, filter: "blur(0px)" }}
-      transition={{ duration: 0.7, delay }}
-      viewport={{ once: true, amount: 0.3 }}
+      initial={{ opacity: 0, y: 12 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.45, delay }}
+      viewport={{ once: true, amount: 0.15 }}
     >
       {children}
     </motion.div>

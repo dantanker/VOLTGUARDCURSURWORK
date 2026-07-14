@@ -34,13 +34,13 @@ export function Header() {
   }
 
   return (
-    <header className="fixed top-0 left-0 right-0 z-50 bg-gradient-to-b from-black/75 via-black/45 to-transparent pb-3 pt-[env(safe-area-inset-top)]">
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 [filter:drop-shadow(0_4px_12px_rgba(0,0,0,0.85))]">
+    <header className="fixed top-0 left-0 right-0 z-50 bg-gradient-to-b from-black/80 via-black/50 to-transparent pb-3 pt-[env(safe-area-inset-top)]">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 md:[filter:drop-shadow(0_4px_12px_rgba(0,0,0,0.85))]">
         <div className="flex items-center justify-between h-auto py-2 gap-2 sm:gap-4">
           {/* Logo — compact on mobile, unchanged on desktop */}
           <button
             onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
-            className="flex items-center group shrink-0 [filter:drop-shadow(0_2px_10px_rgba(0,0,0,0.9))]"
+            className="flex items-center group shrink-0 md:[filter:drop-shadow(0_2px_10px_rgba(0,0,0,0.9))]"
             aria-label="VoltGuard — go to top"
           >
             <Image
@@ -110,7 +110,7 @@ export function Header() {
             >
               {PHONE_NUMBER}
             </a>
-            <div className="[filter:drop-shadow(0_4px_14px_rgba(0,0,0,0.85))]">
+            <div className="md:[filter:drop-shadow(0_4px_14px_rgba(0,0,0,0.85))]">
               <QuoteCtaButton location="header" className="px-6" />
             </div>
           </div>
@@ -120,12 +120,12 @@ export function Header() {
             <a
               href={PHONE_LINK}
               onClick={handlePhoneClick}
-              className="inline-flex h-11 min-w-11 items-center justify-center rounded-xl border border-white/20 bg-white/10 text-white backdrop-blur-sm [filter:drop-shadow(0_2px_8px_rgba(0,0,0,0.9))]"
+              className="inline-flex h-11 min-w-11 items-center justify-center rounded-xl border border-white/20 bg-white/10 text-white"
               aria-label={`Call ${PHONE_NUMBER}`}
             >
               <Phone className="h-5 w-5" />
             </a>
-            <div className="[filter:drop-shadow(0_4px_14px_rgba(0,0,0,0.85))]">
+            <div>
               <QuoteCtaButton
                 location="header-mobile"
                 className="h-11 px-3 py-2"
@@ -135,7 +135,7 @@ export function Header() {
             </div>
             <button
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-              className="inline-flex h-11 min-w-11 items-center justify-center text-white hover:text-white transition-colors [filter:drop-shadow(0_2px_8px_rgba(0,0,0,0.9))]"
+              className="inline-flex h-11 min-w-11 items-center justify-center text-white hover:text-white transition-colors"
               aria-label={isMobileMenuOpen ? "Close menu" : "Open menu"}
               aria-expanded={isMobileMenuOpen}
             >

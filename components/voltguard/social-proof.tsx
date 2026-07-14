@@ -296,12 +296,11 @@ export function SocialProof() {
         </div>
 
         {/* Mobile / tablet — swipe one review at a time */}
-        <div className="lg:hidden space-y-6">
+        <div className="lg:hidden space-y-5">
           <h2 className="text-2xl sm:text-3xl font-bold text-white text-center">
             Real Stories. Real Proof
           </h2>
           <MobileTestimonialsCarousel />
-          <ReviewStats />
         </div>
       </div>
     </section>
