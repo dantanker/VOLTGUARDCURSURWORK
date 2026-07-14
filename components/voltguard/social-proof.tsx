@@ -1,9 +1,16 @@
 "use client"
 
+import { useEffect, useState } from "react"
 import clsx from "clsx"
 import Image from "next/image"
-import { Star } from "lucide-react"
+import { ChevronLeft, ChevronRight, Star } from "lucide-react"
 import { ScrollObserver } from "@/components/ScrollObserver"
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  type CarouselApi,
+} from "@/components/ui/carousel"
 import { SOCIAL_LINKS, TESTIMONIALS } from "@/lib/constants"
 
 const REVIEW_SOURCES = SOCIAL_LINKS.filter(
@@ -120,6 +127,119 @@ function ReviewStats({ compact = false }: { compact?: boolean }) {
   )
 }
 
+function MobileTestimonialsCarousel() {
+  const [api, setApi] = useState<CarouselApi>()
+  const [current, setCurrent] = useState(0)
+
+  useEffect(() => {
+    if (!api) return
+    const onSelect = () => setCurrent(api.selectedScrollSnap())
+    onSelect()
+    api.on("select", onSelect)
+    api.on("reInit", onSelect)
+    return () => {
+      api.off("select", onSelect)
+      api.off("reInit", onSelect)
+    }
+  }, [api])
+
+  return (
+    <div className="w-full">
+      <div className="mb-4 flex items-center justify-between gap-3">
+        <p className="text-xs font-medium uppercase tracking-widest text-slate-500">
+          Swipe to read
+        </p>
+        <div className="flex items-center gap-1.5">
+          <button
+            type="button"
+            onClick={() => api?.scrollPrev()}
+            disabled={current === 0}
+            className="flex h-11 w-11 items-center justify-center rounded-lg border border-slate-700/80 bg-slate-800/80 text-slate-300 transition-colors hover:border-orange-500/40 hover:text-white disabled:opacity-30"
+            aria-label="Previous testimonial"
+          >
+            <ChevronLeft className="h-5 w-5" />
+          </button>
+          <button
+            type="button"
+            onClick={() => api?.scrollNext()}
+            disabled={current === TESTIMONIALS.length - 1}
+            className="flex h-11 w-11 items-center justify-center rounded-lg border border-slate-700/80 bg-slate-800/80 text-slate-300 transition-colors hover:border-orange-500/40 hover:text-white disabled:opacity-30"
+            aria-label="Next testimonial"
+          >
+            <ChevronRight className="h-5 w-5" />
+          </button>
+        </div>
+      </div>
+
+      <Carousel
+        setApi={setApi}
+        opts={{ align: "start", loop: false, dragFree: false }}
+        className="w-full"
+      >
+        <CarouselContent className="-ml-3">
+          {TESTIMONIALS.map((testimonial) => (
+            <CarouselItem key={testimonial.id} className="pl-3 basis-full">
+              <article className="overflow-hidden rounded-2xl border border-slate-700 bg-slate-800/60">
+                <div className="relative w-full aspect-[4/3]">
+                  <Image
+                    src={testimonial.image}
+                    alt={testimonial.author}
+                    fill
+                    className="object-cover"
+                    sizes="100vw"
+                  />
+                </div>
+                <div className="p-5 sm:p-6">
+                  <div className="mb-3 flex items-center gap-1">
+                    {[...Array(5)].map((_, i) => (
+                      <Star
+                        key={i}
+                        className="h-4 w-4 fill-orange-500 text-orange-500"
+                      />
+                    ))}
+                  </div>
+                  <blockquote className="mb-4 text-base leading-relaxed text-slate-200">
+                    &ldquo;{testimonial.quote}&rdquo;
+                  </blockquote>
+                  <p className="font-semibold text-white">{testimonial.author}</p>
+                  <p className="text-sm text-slate-500">{testimonial.location}</p>
+                </div>
+              </article>
+            </CarouselItem>
+          ))}
+        </CarouselContent>
+      </Carousel>
+
+      <div className="mt-5 flex flex-col items-center gap-2">
+        <div className="flex items-center gap-1">
+          {TESTIMONIALS.map((testimonial, index) => (
+            <button
+              key={testimonial.id}
+              type="button"
+              onClick={() => api?.scrollTo(index)}
+              aria-label={`Go to review by ${testimonial.author}`}
+              aria-current={current === index}
+              className="flex min-h-11 min-w-11 items-center justify-center"
+            >
+              <span
+                className={clsx(
+                  "rounded-full transition-all duration-300",
+                  current === index
+                    ? "h-2.5 w-6 bg-orange-500"
+                    : "h-2.5 w-2.5 bg-slate-600"
+                )}
+              />
+            </button>
+          ))}
+        </div>
+        <p className="text-xs text-slate-500">
+          {current + 1} of {TESTIMONIALS.length}
+        </p>
+      </div>
+    </div>
+  )
+}
+
 export function SocialProof() {
   return (
     <section id="testimonials" className="relative scroll-mt-24 md:scroll-mt-40 pt-4 md:pt-6 pb-0">
@@ -224,41 +344,12 @@ export function SocialProof() {
           </ScrollObserver>
         </div>
 
-        {/* Mobile / tablet */}
+        {/* Mobile / tablet — swipe one review at a time */}
         <div className="lg:hidden">
-          <h2 className="text-2xl sm:text-3xl font-bold text-white text-center mb-8">
+          <h2 className="text-2xl sm:text-3xl font-bold text-white text-center mb-6">
             Real Stories. Real Proof
           </h2>
-          <div className="space-y-10">
-            {TESTIMONIALS.map((testimonial) => (
-              <article
-                key={testimonial.id}
-                className="rounded-2xl overflow-hidden bg-slate-800/60 border border-slate-700"
-              >
-                <div className="relative w-full aspect-[4/3]">
-                  <Image
-                    src={testimonial.image}
-                    alt={testimonial.author}
-                    fill
-                    className="object-cover"
-                    sizes="100vw"
-                  />
-                </div>
-                <div className="p-6">
-                  <div className="flex items-center gap-1 mb-3">
-                    {[...Array(5)].map((_, i) => (
-                      <Star key={i} className="w-4 h-4 text-orange-500 fill-orange-500" />
-                    ))}
-                  </div>
-                  <blockquote className="text-slate-200 leading-relaxed mb-4">
-                    &ldquo;{testimonial.quote}&rdquo;
-                  </blockquote>
-                  <p className="text-white font-semibold">{testimonial.author}</p>
-                  <p className="text-slate-500 text-sm">{testimonial.location}</p>
-                </div>
-              </article>
-            ))}
-          </div>
+          <MobileTestimonialsCarousel />
           <ReviewStats />
         </div>
       </div>

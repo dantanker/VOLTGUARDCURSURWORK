@@ -17,6 +17,7 @@ function lerp(a: number, b: number, t: number) {
   return a + (b - a) * t
 }
 
+/** Desktop arc gallery — mobile uses a separate carousel. */
 export function ServicesArcGallery() {
   const containerRef = useRef<HTMLDivElement>(null)
   const trackRef = useRef<HTMLDivElement>(null)
@@ -146,7 +147,6 @@ export function ServicesArcGallery() {
     containerRef.current?.releasePointerCapture(e.pointerId)
   }
 
-  /** Only horizontal wheel adjusts gallery — vertical scroll goes to the page */
   const onWheel = (e: React.WheelEvent) => {
     const isHorizontal = Math.abs(e.deltaX) > Math.abs(e.deltaY)
     if (!isHorizontal && !e.shiftKey) return
@@ -160,7 +160,7 @@ export function ServicesArcGallery() {
   return (
     <div
       ref={containerRef}
-      className="services-arc-gallery relative w-full h-full overflow-hidden cursor-grab active:cursor-grabbing select-none touch-pan-y"
+      className="services-arc-gallery relative w-full h-full overflow-hidden cursor-grab active:cursor-grabbing select-none"
       onPointerDown={onPointerDown}
       onPointerMove={onPointerMove}
       onPointerUp={onPointerUp}
@@ -187,7 +187,7 @@ export function ServicesArcGallery() {
             className="flex shrink-0 flex-col items-center will-change-transform pointer-events-none"
             style={{ width: CARD_WIDTH }}
           >
-            <div className="relative w-full h-[320px] sm:h-[380px] md:h-[420px] overflow-hidden rounded-xl">
+            <div className="relative w-full h-[420px] overflow-hidden rounded-xl">
               <Image
                 src={service.image}
                 alt={service.title}
@@ -197,7 +197,7 @@ export function ServicesArcGallery() {
                 sizes="280px"
               />
             </div>
-            <h3 className="mt-4 w-full text-center text-base sm:text-lg font-semibold text-white leading-snug px-1">
+            <h3 className="mt-4 w-full text-center text-lg font-semibold text-white leading-snug px-1">
               {service.title}
             </h3>
           </article>
