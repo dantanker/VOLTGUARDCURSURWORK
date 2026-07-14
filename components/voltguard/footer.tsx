@@ -107,25 +107,25 @@ export function Footer() {
 
   return (
     <>
-      <div className="relative z-10 py-3">
+      <div className="relative z-10 py-4 md:py-3">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex flex-col sm:flex-row items-center justify-center gap-2">
             <SpotlightButton
               href={PHONE_LINK}
               onClick={handlePhoneClick}
-              className="h-12 px-6 w-full sm:h-10 sm:w-auto"
+              className="h-11 px-6 w-full sm:h-10 sm:w-auto"
             >
               <Phone className="h-4 w-4 text-white" />
               <SpotlightButtonLabel className="text-base">
                 Call {PHONE_NUMBER}
               </SpotlightButtonLabel>
             </SpotlightButton>
-            <QuoteCtaButton location="footer" className="h-12 px-6 w-full sm:h-10 sm:w-auto" />
+            <QuoteCtaButton location="footer" className="h-11 px-6 w-full sm:h-10 sm:w-auto" />
           </div>
         </div>
       </div>
 
-      <footer id="contact" className="relative z-10 scroll-mt-24 md:scroll-mt-40 pt-5 pb-24 md:pb-4">
+      <footer id="contact" className="relative z-10 scroll-mt-24 md:scroll-mt-40 pt-5 pb-8 md:pb-4">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="border-b border-slate-800 pb-5 mb-5">
             <PartnerMarqueeInline />
@@ -207,18 +207,18 @@ export function Footer() {
             </div>
 
             <div id="licenses" className="scroll-mt-24 md:scroll-mt-40">
-              <h3 className="text-[11px] font-semibold uppercase tracking-wider text-slate-300 mb-2 flex items-center gap-1">
+              <h3 className="mb-3 flex items-center gap-1.5 text-[11px] font-semibold uppercase tracking-wider text-slate-300">
                 <Shield className="h-3 w-3 text-orange-400" />
                 Licenses
               </h3>
-              <p className="mb-2 text-xs font-medium text-orange-300/90">
-                Fully licensed electrical contractor
+              <p className="mb-3 text-xs font-medium leading-relaxed text-orange-300/90">
+                Fully licensed · Bonded &amp; insured
               </p>
-              <ul className="space-y-1.5">
+              <ul className="space-y-2.5">
                 {FOOTER_LICENSES.map((license) => (
-                  <li key={license.label} className="text-[11px]">
+                  <li key={license.label} className="text-[11px] leading-relaxed">
                     <p className="text-slate-500">{license.label}</p>
-                    <p className="font-mono text-slate-300">{license.number}</p>
+                    <p className="mt-0.5 font-mono text-slate-300">{license.number}</p>
                   </li>
                 ))}
               </ul>

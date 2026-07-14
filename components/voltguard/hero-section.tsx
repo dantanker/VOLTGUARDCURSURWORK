@@ -28,17 +28,27 @@ export function HeroSection() {
           </FadeInUp>
 
           <FadeInUp delay={0.15}>
-            <div className="space-y-3">
+            <div className="flex flex-col items-start gap-4 sm:gap-5">
               <QuoteCtaButton
                 location="hero"
                 className="h-12 w-full max-w-xs px-6 text-base sm:h-14 sm:w-auto sm:px-8 sm:text-lg"
               />
               <a
                 href="#licenses"
-                className="inline-flex items-center gap-2 text-sm font-medium text-slate-200/90 transition-colors hover:text-white [text-shadow:0_2px_8px_rgba(0,0,0,0.85)]"
+                className="group inline-flex max-w-xs items-start gap-2.5 text-left transition-colors sm:max-w-none"
               >
-                <Shield className="h-4 w-4 text-orange-400" aria-hidden />
-                Licensed · Bonded · Insured — IL EC-2847193
+                <Shield
+                  className="mt-0.5 h-4 w-4 shrink-0 text-orange-400 [filter:drop-shadow(0_2px_6px_rgba(0,0,0,0.8))]"
+                  aria-hidden
+                />
+                <span className="flex flex-col gap-1 [text-shadow:0_2px_8px_rgba(0,0,0,0.85)]">
+                  <span className="text-sm font-medium leading-snug tracking-wide text-slate-100 group-hover:text-white">
+                    Licensed · Bonded · Insured
+                  </span>
+                  <span className="text-xs font-normal tracking-wide text-slate-300/90 group-hover:text-slate-200">
+                    Illinois EC-2847193
+                  </span>
+                </span>
               </a>
             </div>
           </FadeInUp>

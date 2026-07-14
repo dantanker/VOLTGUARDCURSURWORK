@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react"
 import clsx from "clsx"
 import Image from "next/image"
-import { ChevronLeft, ChevronRight, Star } from "lucide-react"
+import { Star } from "lucide-react"
 import { ScrollObserver } from "@/components/ScrollObserver"
 import {
   Carousel,
@@ -48,40 +48,6 @@ function YelpIcon({ className }: { className?: string }) {
   )
 }
 
-function ReviewSourceIcon({ label }: { label: string }) {
-  if (label === "Google") return <GoogleIcon className="h-3.5 w-3.5 shrink-0" />
-  if (label === "Yelp") return <YelpIcon className="h-3.5 w-3.5 shrink-0" />
-  return null
-}
-
-function ReviewSourceBadge({
-  source,
-  align,
-}: {
-  source: (typeof REVIEW_SOURCES)[number]
-  align: "left" | "right"
-}) {
-  return (
-    <a
-      href={source.href}
-      target="_blank"
-      rel="noopener noreferrer"
-      aria-label={source.label}
-      className={clsx(
-        "group flex shrink-0 flex-col gap-1 transition-opacity hover:opacity-100",
-        align === "left" ? "items-start" : "items-end",
-        "opacity-90"
-      )}
-    >
-      <span className="inline-flex items-center gap-1.5 rounded-full border border-slate-700/70 bg-slate-800/60 px-2.5 py-1 text-[11px] font-medium text-slate-200 transition-colors group-hover:border-slate-500 group-hover:text-white">
-        <ReviewSourceIcon label={source.shortLabel} />
-        {source.shortLabel}
-      </span>
-      <span className="text-[10px] text-slate-500">Verified</span>
-    </a>
-  )
-}
-
 function ReviewStats({ compact = false }: { compact?: boolean }) {
   const google = REVIEW_SOURCES.find((s) => s.shortLabel === "Google")!
   const yelp = REVIEW_SOURCES.find((s) => s.shortLabel === "Yelp")!
@@ -89,39 +55,53 @@ function ReviewStats({ compact = false }: { compact?: boolean }) {
   return (
     <div
       className={clsx(
-        "w-full max-w-md",
-        compact ? "pt-3" : "border-t border-slate-800 pt-6 mt-8"
+        "w-full max-w-sm mx-auto",
+        compact ? "pt-4" : "mt-8 pt-6 border-t border-slate-800/80"
       )}
     >
-      <div className="flex items-center justify-between gap-3">
-        <ReviewSourceBadge source={google} align="left" />
-
-        <div className="min-w-0 flex-1 text-center">
-          <div className="flex items-center justify-center gap-1 mb-0.5">
-            <span
-              className={clsx(
-                "font-bold text-white tabular-nums",
-                compact ? "text-xl" : "text-2xl sm:text-3xl"
-              )}
-            >
-              4.9
-            </span>
-            <div className="flex items-center gap-px">
-              {[...Array(5)].map((_, i) => (
-                <Star
-                  key={i}
-                  className={clsx(
-                    "text-orange-500 fill-orange-500",
-                    compact ? "w-3 h-3" : "w-3.5 h-3.5"
-                  )}
-                />
-              ))}
-            </div>
+      <div className="flex flex-col items-center gap-3 text-center">
+        <div className="flex items-center gap-2">
+          <span
+            className={clsx(
+              "font-bold text-white tabular-nums",
+              compact ? "text-2xl" : "text-3xl"
+            )}
+          >
+            4.9
+          </span>
+          <div className="flex items-center gap-0.5">
+            {[...Array(5)].map((_, i) => (
+              <Star
+                key={i}
+                className="h-4 w-4 fill-orange-500 text-orange-500"
+              />
+            ))}
           </div>
-          <p className="text-[11px] text-slate-500 sm:text-xs">Average rating</p>
         </div>
-
-        <ReviewSourceBadge source={yelp} align="right" />
+        <p className="text-sm text-slate-400">Average rating from local customers</p>
+        <div className="flex items-center justify-center gap-2">
+          <a
+            href={google.href}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-1.5 rounded-lg px-3 py-2 text-sm text-slate-300 transition-colors hover:text-white"
+          >
+            <GoogleIcon className="h-4 w-4" />
+            Google
+          </a>
+          <span className="text-slate-700" aria-hidden>
+            ·
+          </span>
+          <a
+            href={yelp.href}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-1.5 rounded-lg px-3 py-2 text-sm text-slate-300 transition-colors hover:text-white"
+          >
+            <YelpIcon className="h-4 w-4" />
+            Yelp
+          </a>
+        </div>
       </div>
     </div>
   )
@@ -145,42 +125,16 @@ function MobileTestimonialsCarousel() {
 
   return (
     <div className="w-full">
-      <div className="mb-4 flex items-center justify-between gap-3">
-        <p className="text-xs font-medium uppercase tracking-widest text-slate-500">
-          Swipe to read
-        </p>
-        <div className="flex items-center gap-1.5">
-          <button
-            type="button"
-            onClick={() => api?.scrollPrev()}
-            disabled={current === 0}
-            className="flex h-11 w-11 items-center justify-center rounded-lg border border-slate-700/80 bg-slate-800/80 text-slate-300 transition-colors hover:border-orange-500/40 hover:text-white disabled:opacity-30"
-            aria-label="Previous testimonial"
-          >
-            <ChevronLeft className="h-5 w-5" />
-          </button>
-          <button
-            type="button"
-            onClick={() => api?.scrollNext()}
-            disabled={current === TESTIMONIALS.length - 1}
-            className="flex h-11 w-11 items-center justify-center rounded-lg border border-slate-700/80 bg-slate-800/80 text-slate-300 transition-colors hover:border-orange-500/40 hover:text-white disabled:opacity-30"
-            aria-label="Next testimonial"
-          >
-            <ChevronRight className="h-5 w-5" />
-          </button>
-        </div>
-      </div>
-
       <Carousel
         setApi={setApi}
         opts={{ align: "start", loop: false, dragFree: false }}
         className="w-full"
       >
-        <CarouselContent className="-ml-3">
+        <CarouselContent className="-ml-4">
           {TESTIMONIALS.map((testimonial) => (
-            <CarouselItem key={testimonial.id} className="pl-3 basis-full">
-              <article className="overflow-hidden rounded-2xl border border-slate-700 bg-slate-800/60">
-                <div className="relative w-full aspect-[4/3]">
+            <CarouselItem key={testimonial.id} className="pl-4 basis-full">
+              <article className="overflow-hidden rounded-2xl bg-slate-900/70 ring-1 ring-white/10">
+                <div className="relative aspect-[16/10] w-full">
                   <Image
                     src={testimonial.image}
                     alt={testimonial.author}
@@ -189,20 +143,22 @@ function MobileTestimonialsCarousel() {
                     sizes="100vw"
                   />
                 </div>
-                <div className="p-5 sm:p-6">
-                  <div className="mb-3 flex items-center gap-1">
+                <div className="space-y-3 p-5">
+                  <div className="flex items-center gap-0.5">
                     {[...Array(5)].map((_, i) => (
                       <Star
                         key={i}
-                        className="h-4 w-4 fill-orange-500 text-orange-500"
+                        className="h-3.5 w-3.5 fill-orange-500 text-orange-500"
                       />
                     ))}
                   </div>
-                  <blockquote className="mb-4 text-base leading-relaxed text-slate-200">
+                  <blockquote className="text-[15px] leading-relaxed text-slate-200">
                     &ldquo;{testimonial.quote}&rdquo;
                   </blockquote>
-                  <p className="font-semibold text-white">{testimonial.author}</p>
-                  <p className="text-sm text-slate-500">{testimonial.location}</p>
+                  <div>
+                    <p className="font-semibold text-white">{testimonial.author}</p>
+                    <p className="text-sm text-slate-500">{testimonial.location}</p>
+                  </div>
                 </div>
               </article>
             </CarouselItem>
@@ -210,31 +166,26 @@ function MobileTestimonialsCarousel() {
         </CarouselContent>
       </Carousel>
 
-      <div className="mt-5 flex flex-col items-center gap-2">
-        <div className="flex items-center gap-1">
-          {TESTIMONIALS.map((testimonial, index) => (
-            <button
-              key={testimonial.id}
-              type="button"
-              onClick={() => api?.scrollTo(index)}
-              aria-label={`Go to review by ${testimonial.author}`}
-              aria-current={current === index}
-              className="flex min-h-11 min-w-11 items-center justify-center"
-            >
-              <span
-                className={clsx(
-                  "rounded-full transition-all duration-300",
-                  current === index
-                    ? "h-2.5 w-6 bg-orange-500"
-                    : "h-2.5 w-2.5 bg-slate-600"
-                )}
-              />
-            </button>
-          ))}
-        </div>
-        <p className="text-xs text-slate-500">
-          {current + 1} of {TESTIMONIALS.length}
-        </p>
+      <div className="mt-4 flex items-center justify-center gap-2">
+        {TESTIMONIALS.map((testimonial, index) => (
+          <button
+            key={testimonial.id}
+            type="button"
+            onClick={() => api?.scrollTo(index)}
+            aria-label={`Go to review by ${testimonial.author}`}
+            aria-current={current === index}
+            className="p-1.5"
+          >
+            <span
+              className={clsx(
+                "block rounded-full transition-all duration-300",
+                current === index
+                  ? "h-1.5 w-5 bg-orange-500"
+                  : "h-1.5 w-1.5 bg-slate-600"
+              )}
+            />
+          </button>
+        ))}
       </div>
     </div>
   )
@@ -345,8 +296,8 @@ export function SocialProof() {
         </div>
 
         {/* Mobile / tablet — swipe one review at a time */}
-        <div className="lg:hidden">
-          <h2 className="text-2xl sm:text-3xl font-bold text-white text-center mb-6">
+        <div className="lg:hidden space-y-6">
+          <h2 className="text-2xl sm:text-3xl font-bold text-white text-center">
             Real Stories. Real Proof
           </h2>
           <MobileTestimonialsCarousel />

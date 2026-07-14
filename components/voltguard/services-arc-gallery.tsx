@@ -381,12 +381,6 @@ export function ServicesArcGallery() {
           </article>
         ))}
       </div>
-
-      {isMobile && (
-        <p className="pointer-events-none absolute inset-x-0 bottom-0 pb-0.5 text-center text-[11px] text-slate-500">
-          Swipe
-        </p>
-      )}
     </div>
   )
 }

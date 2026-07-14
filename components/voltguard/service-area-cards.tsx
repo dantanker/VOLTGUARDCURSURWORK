@@ -227,9 +227,12 @@ export function ServiceAreaMobileCard() {
           </p>
         </div>
 
-        <div className="flex items-center gap-2 rounded-xl border border-blue-500/20 bg-blue-500/10 px-4 py-3 text-sm text-blue-100">
-          <Shield className="h-4 w-4 shrink-0 text-blue-300" />
-          <span>Illinois licensed · Bonded &amp; insured</span>
+        <div className="flex items-start gap-3 rounded-xl border border-blue-500/20 bg-blue-500/10 px-4 py-3.5 text-sm text-blue-100">
+          <Shield className="mt-0.5 h-4 w-4 shrink-0 text-blue-300" />
+          <span className="flex flex-col gap-0.5 leading-snug">
+            <span className="font-medium">Illinois licensed · Bonded &amp; insured</span>
+            <span className="text-xs text-blue-200/70">EC-2847193</span>
+          </span>
         </div>
 
         <a

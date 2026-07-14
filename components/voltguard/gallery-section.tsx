@@ -2,7 +2,6 @@
 
 import { useEffect, useState } from "react"
 import Image from "next/image"
-import { ChevronLeft, ChevronRight } from "lucide-react"
 import { ImageComparison } from "@/components/ImageComparison"
 import { ZoomParallax } from "@/components/ZoomParallax"
 import { ShinyHeading } from "@/components/ShinyText"
@@ -134,35 +133,6 @@ function MobileProjectPhotos() {
 
   return (
     <div className="mt-8">
-      <div className="mb-4 flex items-center justify-between gap-3 px-1">
-        <div>
-          <p className="text-xs font-semibold uppercase tracking-widest text-orange-500">
-            Project photos
-          </p>
-          <p className="mt-1 text-sm text-slate-400">Swipe through recent work</p>
-        </div>
-        <div className="flex items-center gap-1.5">
-          <button
-            type="button"
-            onClick={() => api?.scrollPrev()}
-            disabled={current === 0}
-            className="flex h-11 w-11 items-center justify-center rounded-lg border border-slate-700/80 bg-slate-800/80 text-slate-300 disabled:opacity-30"
-            aria-label="Previous photo"
-          >
-            <ChevronLeft className="h-5 w-5" />
-          </button>
-          <button
-            type="button"
-            onClick={() => api?.scrollNext()}
-            disabled={current === PROJECT_PHOTOS.length - 1}
-            className="flex h-11 w-11 items-center justify-center rounded-lg border border-slate-700/80 bg-slate-800/80 text-slate-300 disabled:opacity-30"
-            aria-label="Next photo"
-          >
-            <ChevronRight className="h-5 w-5" />
-          </button>
-        </div>
-      </div>
-
       <Carousel
         setApi={setApi}
         opts={{ align: "center", loop: false }}
@@ -170,51 +140,41 @@ function MobileProjectPhotos() {
       >
         <CarouselContent className="-ml-3">
           {PROJECT_PHOTOS.map((photo) => (
-            <CarouselItem key={photo.src} className="pl-3 basis-[92%] sm:basis-[80%]">
-              <figure className="overflow-hidden rounded-2xl border border-slate-700/70 bg-slate-900/50">
-                <div className="relative aspect-[4/3] w-full">
-                  <Image
-                    src={photo.src}
-                    alt={photo.alt}
-                    fill
-                    className="object-cover"
-                    sizes="92vw"
-                    draggable={false}
-                  />
-                </div>
-                <figcaption className="px-4 py-3 text-sm font-medium text-slate-200">
-                  {photo.label}
-                </figcaption>
-              </figure>
+            <CarouselItem key={photo.src} className="pl-3 basis-[90%]">
+              <div className="relative aspect-[4/3] w-full overflow-hidden rounded-2xl ring-1 ring-white/10">
+                <Image
+                  src={photo.src}
+                  alt={photo.alt}
+                  fill
+                  className="object-cover"
+                  sizes="90vw"
+                  draggable={false}
+                />
+              </div>
             </CarouselItem>
           ))}
         </CarouselContent>
       </Carousel>
 
-      <div className="mt-4 flex flex-col items-center gap-2">
-        <div className="flex flex-wrap items-center justify-center gap-0.5">
-          {PROJECT_PHOTOS.map((photo, index) => (
-            <button
-              key={photo.src}
-              type="button"
-              onClick={() => api?.scrollTo(index)}
-              aria-label={`Go to ${photo.label}`}
-              className="flex h-9 w-9 items-center justify-center"
-            >
-              <span
-                className={cn(
-                  "rounded-full transition-all duration-300",
-                  current === index
-                    ? "h-2 w-5 bg-orange-500"
-                    : "h-2 w-2 bg-slate-600"
-                )}
-              />
-            </button>
-          ))}
-        </div>
-        <p className="text-xs text-slate-500">
-          {current + 1} of {PROJECT_PHOTOS.length}
-        </p>
+      <div className="mt-4 flex items-center justify-center gap-2">
+        {PROJECT_PHOTOS.map((photo, index) => (
+          <button
+            key={photo.src}
+            type="button"
+            onClick={() => api?.scrollTo(index)}
+            aria-label={`Photo ${index + 1}`}
+            className="p-1.5"
+          >
+            <span
+              className={cn(
+                "block rounded-full transition-all duration-300",
+                current === index
+                  ? "h-1.5 w-5 bg-orange-500"
+                  : "h-1.5 w-1.5 bg-slate-600"
+              )}
+            />
+          </button>
+        ))}
       </div>
     </div>
   )
@@ -227,15 +187,15 @@ function MobileBeforeAfterTabs() {
   const active = GALLERY_ITEMS.find((item) => item.id === activeId) ?? GALLERY_ITEMS[0]
 
   return (
-    <div>
-      <div className="mb-3 flex gap-2">
+    <div className="space-y-3">
+      <div className="flex gap-2">
         {GALLERY_ITEMS.map((item) => (
           <button
             key={item.id}
             type="button"
             onClick={() => setActiveId(item.id)}
             className={cn(
-              "min-h-11 flex-1 rounded-xl px-3 py-2.5 text-sm font-medium transition-colors",
+              "min-h-10 flex-1 rounded-xl px-3 py-2 text-sm font-medium transition-colors",
               activeId === item.id
                 ? "bg-orange-500/20 text-orange-300 ring-1 ring-orange-500/40"
                 : "bg-slate-800/80 text-slate-400 ring-1 ring-slate-700/60"
@@ -253,14 +213,10 @@ function MobileBeforeAfterTabs() {
             afterImage={active.after.src}
             altBefore={active.before.alt}
             altAfter={active.after.alt}
-            className="aspect-[5/4] rounded-none sm:aspect-[4/3]"
+            className="aspect-[5/4] rounded-none"
           />
-          <div className="pointer-events-none absolute inset-x-0 bottom-0 z-20 bg-gradient-to-t from-black/90 via-black/55 to-transparent px-4 pb-4 pt-14">
-            <h3 className="text-base font-semibold text-white">{active.title}</h3>
-            <p className="mt-1 text-sm leading-snug text-slate-300">{active.subtitle}</p>
-            <p className="mt-2 text-xs font-medium uppercase tracking-wide text-orange-300/90">
-              Drag the handle · Before / After
-            </p>
+          <div className="pointer-events-none absolute inset-x-0 bottom-0 z-20 bg-gradient-to-t from-black/85 via-black/40 to-transparent px-4 pb-3.5 pt-12">
+            <h3 className="text-sm font-semibold text-white">{active.title}</h3>
           </div>
         </div>
       </article>
@@ -270,7 +226,7 @@ function MobileBeforeAfterTabs() {
 
 export function GallerySection() {
   return (
-    <section id="gallery" className="relative scroll-mt-24 md:scroll-mt-40 py-6 md:py-8">
+    <section id="gallery" className="relative scroll-mt-24 md:scroll-mt-40 py-8 md:py-8">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-6 md:mb-7">
           <FadeInUp delay={0}>
@@ -285,17 +241,14 @@ export function GallerySection() {
             </h2>
           </FadeInUp>
           <FadeInUp delay={0.1}>
-            <p className="text-slate-300 max-w-2xl mx-auto text-sm sm:text-base">
-              <span className="md:hidden">Before &amp; after jobs and project photos</span>
-              <span className="hidden md:inline">
-                Slide to witness the VoltGuard transformation
-              </span>
+            <p className="hidden md:block text-slate-300 max-w-2xl mx-auto text-base">
+              Slide to witness the VoltGuard transformation
             </p>
           </FadeInUp>
         </div>
 
         {/* Mobile gallery */}
-        <div className="md:hidden">
+        <div className="space-y-2 md:hidden">
           <MobileBeforeAfterTabs />
           <MobileProjectPhotos />
         </div>

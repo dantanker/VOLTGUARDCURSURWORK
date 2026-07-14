@@ -7,7 +7,6 @@ import { ServicesGrid } from "@/components/voltguard/services-grid"
 import { GallerySection } from "@/components/voltguard/gallery-section"
 import { FAQSection } from "@/components/voltguard/faq-section"
 import { Footer } from "@/components/voltguard/footer"
-import { MobileStickyCta } from "@/components/voltguard/mobile-sticky-cta"
 import { QuoteModalProvider } from "@/components/voltguard/quote-modal-provider"
 import { AnimatedDarkBackground } from "@/components/AnimatedDarkBackground"
 
@@ -27,7 +26,6 @@ export default function Home() {
           <FAQSection />
         </main>
         <Footer />
-        <MobileStickyCta />
       </div>
     </QuoteModalProvider>
   )
