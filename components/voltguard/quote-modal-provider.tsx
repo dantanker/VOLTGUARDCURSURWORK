@@ -40,10 +40,12 @@ const OTHER_SERVICE = "other"
 
 type QuoteModalContextValue = {
   openQuoteModal: (location: string) => void
+  isQuoteModalOpen: boolean
 }
 
 const QuoteModalContext = createContext<QuoteModalContextValue>({
   openQuoteModal: () => {},
+  isQuoteModalOpen: false,
 })
 
 export function useQuoteModal() {
@@ -99,7 +101,7 @@ const SHIELD_PATH =
   "M 260 22 L 482 90 L 482 355 Q 482 525 260 648 Q 38 525 38 355 L 38 90 Z"
 
 const labelClass =
-  "block text-center text-[10px] font-semibold uppercase tracking-[0.12em] text-slate-400"
+  "block text-center text-xs font-semibold uppercase tracking-[0.12em] text-slate-400 sm:text-[10px]"
 
 function FieldGroup({
   label,
@@ -125,14 +127,14 @@ function FieldGroup({
       {message ? (
         <p
           className={cn(
-            "flex items-center justify-center gap-1 text-center text-[10px] leading-tight",
+            "flex items-center justify-center gap-1 text-center text-xs leading-tight sm:text-[10px]",
             messageTone === "success" ? "text-green-400" : "text-red-400"
           )}
         >
           {messageTone === "error" ? (
-            <AlertCircle className="h-3 w-3 shrink-0" />
+            <AlertCircle className="h-3.5 w-3.5 shrink-0 sm:h-3 sm:w-3" />
           ) : (
-            <CheckCircle className="h-3 w-3 shrink-0" />
+            <CheckCircle className="h-3.5 w-3.5 shrink-0 sm:h-3 sm:w-3" />
           )}
           {message}
         </p>
@@ -288,7 +290,7 @@ function QuoteShieldForm({ onSuccess }: { onSuccess: (confirmation: string) => v
 
   const fieldClass = (field: keyof FormState, success?: boolean) =>
     cn(
-      "h-9 w-full rounded-md bg-slate-950/70 text-center text-sm text-white",
+      "h-11 w-full rounded-md bg-slate-950/70 text-center text-base text-white sm:h-9 sm:text-sm",
       "border border-slate-600/70 placeholder:text-slate-500",
       "focus-visible:border-orange-500/70 focus-visible:ring-2 focus-visible:ring-orange-500/15",
       errors[field] && touched[field] && "border-red-500/70",
@@ -331,7 +333,7 @@ function QuoteShieldForm({ onSuccess }: { onSuccess: (confirmation: string) => v
       </FieldGroup>
 
       <div className="mt-2 flex flex-col gap-3">
-      <div className="grid grid-cols-[minmax(0,1fr)_92px] gap-2.5">
+      <div className="grid grid-cols-1 gap-3 sm:grid-cols-[minmax(0,1fr)_92px] sm:gap-2.5">
         <FieldGroup
           label="Phone Number"
           htmlFor="quote-phone"
@@ -446,7 +448,7 @@ function QuoteShieldForm({ onSuccess }: { onSuccess: (confirmation: string) => v
         <SpotlightButton
           type="submit"
           disabled={isSubmitting}
-          className="w-[240px] max-w-full py-2.5 px-4 shadow-lg shadow-orange-500/20"
+          className="w-full max-w-[280px] py-3 px-4 shadow-lg shadow-orange-500/20 sm:w-[240px] sm:py-2.5"
         >
           {isSubmitting ? (
             <>
@@ -458,7 +460,7 @@ function QuoteShieldForm({ onSuccess }: { onSuccess: (confirmation: string) => v
           )}
         </SpotlightButton>
 
-        <p className="mt-1.5 text-center text-[10px] leading-snug text-slate-500">
+        <p className="mt-2 text-center text-xs leading-snug text-slate-500 sm:mt-1.5 sm:text-[10px]">
           No credit card required · We&apos;ll call within 15 minutes
         </p>
       </div>
@@ -548,18 +550,18 @@ function QuoteModalContent({
                 className="relative z-10 flex h-full flex-col overflow-hidden px-8 pb-11 pt-11 sm:px-10 sm:pb-12 sm:pt-12"
                 style={{ clipPath: `url(#${SHIELD_CLIP_ID})` }}
               >
-                <DialogPrimitive.Close className="absolute right-3.5 top-3.5 z-20 rounded-full border border-slate-600/60 bg-slate-900/90 p-1.5 text-slate-300 transition-colors hover:border-orange-500/50 hover:text-white focus:outline-none focus:ring-2 focus:ring-orange-500/40 sm:right-4 sm:top-4">
-                  <X className="h-4 w-4" />
+                <DialogPrimitive.Close className="absolute right-3 top-3 z-20 inline-flex h-11 w-11 items-center justify-center rounded-full border border-slate-600/60 bg-slate-900/90 text-slate-300 transition-colors hover:border-orange-500/50 hover:text-white focus:outline-none focus:ring-2 focus:ring-orange-500/40 sm:right-4 sm:top-4 sm:h-auto sm:w-auto sm:p-1.5">
+                  <X className="h-5 w-5 sm:h-4 sm:w-4" />
                   <span className="sr-only">Close</span>
                 </DialogPrimitive.Close>
 
                 {!submitted ? (
                   <>
                     <div className="mb-5 mt-3 shrink-0 text-center sm:mt-4">
-                      <DialogPrimitive.Title className="bg-gradient-to-b from-white to-slate-300 bg-clip-text text-lg font-bold text-transparent sm:text-xl">
+                      <DialogPrimitive.Title className="bg-gradient-to-b from-white to-slate-300 bg-clip-text text-xl font-bold text-transparent sm:text-xl">
                         {CTA_LABEL}
                       </DialogPrimitive.Title>
-                      <p className="mx-auto mt-1.5 max-w-[260px] text-[11px] leading-relaxed text-slate-400 sm:text-xs">
+                      <p className="mx-auto mt-1.5 max-w-[260px] text-sm leading-relaxed text-slate-400 sm:text-xs">
                         Protected by VoltGuard — tell us what you need.
                       </p>
                       <div className="mx-auto mt-2.5 h-px w-14 bg-gradient-to-r from-transparent via-orange-500/50 to-transparent" />
@@ -618,7 +620,7 @@ export function QuoteModalProvider({ children }: { children: ReactNode }) {
   }, [])
 
   return (
-    <QuoteModalContext.Provider value={{ openQuoteModal }}>
+    <QuoteModalContext.Provider value={{ openQuoteModal, isQuoteModalOpen: open }}>
       {children}
       <QuoteModalContent open={open} onOpenChange={setOpen} location={location} />
     </QuoteModalContext.Provider>

@@ -229,19 +229,19 @@ export function ServiceAreaCards() {
             type="button"
             onClick={() => api?.scrollPrev()}
             disabled={current === 0}
-            className="flex h-8 w-8 items-center justify-center rounded-lg border border-slate-700/80 bg-slate-800/80 text-slate-300 transition-colors hover:border-orange-500/40 hover:text-white disabled:opacity-30"
+            className="flex h-11 w-11 md:h-8 md:w-8 items-center justify-center rounded-lg border border-slate-700/80 bg-slate-800/80 text-slate-300 transition-colors hover:border-orange-500/40 hover:text-white disabled:opacity-30"
             aria-label="Previous card"
           >
-            <ChevronLeft className="h-4 w-4" />
+            <ChevronLeft className="h-5 w-5 md:h-4 md:w-4" />
           </button>
           <button
             type="button"
             onClick={() => api?.scrollNext()}
             disabled={current === CARD_LABELS.length - 1}
-            className="flex h-8 w-8 items-center justify-center rounded-lg border border-slate-700/80 bg-slate-800/80 text-slate-300 transition-colors hover:border-orange-500/40 hover:text-white disabled:opacity-30"
+            className="flex h-11 w-11 md:h-8 md:w-8 items-center justify-center rounded-lg border border-slate-700/80 bg-slate-800/80 text-slate-300 transition-colors hover:border-orange-500/40 hover:text-white disabled:opacity-30"
             aria-label="Next card"
           >
-            <ChevronRight className="h-4 w-4" />
+            <ChevronRight className="h-5 w-5 md:h-4 md:w-4" />
           </button>
         </div>
       </div>
@@ -350,12 +350,20 @@ export function ServiceAreaCards() {
               onClick={() => api?.scrollTo(index)}
               aria-label={`Go to ${label}`}
               className={cn(
-                "h-2 rounded-full transition-all duration-300",
+                "min-h-11 min-w-11 md:min-h-0 md:min-w-0 flex items-center justify-center rounded-full transition-all duration-300",
                 current === index
-                  ? "w-6 bg-orange-500"
-                  : "w-2 bg-slate-600 hover:bg-slate-500"
+                  ? "md:h-2 md:w-6 md:min-w-6 bg-orange-500"
+                  : "md:h-2 md:w-2 bg-slate-600 hover:bg-slate-500"
               )}
-            />
+            >
+              <span
+                className={cn(
+                  "rounded-full transition-all duration-300 md:hidden",
+                  current === index ? "h-2.5 w-6 bg-orange-500" : "h-2.5 w-2.5 bg-slate-600"
+                )}
+                aria-hidden
+              />
+            </button>
           ))}
         </div>
         <p className="text-xs text-slate-500">{CARD_LABELS[current]}</p>

@@ -5,7 +5,7 @@ import { FadeInUp, SlideInLeft, SlideInRight } from "@/lib/scroll-animations"
 
 export function ServiceAreaSection() {
   return (
-    <section id="service-area" className="relative scroll-mt-20 pt-0 md:pt-2 pb-6 md:pb-8 overflow-hidden">
+    <section id="service-area" className="relative scroll-mt-24 md:scroll-mt-40 pt-0 md:pt-2 pb-6 md:pb-8 overflow-hidden">
       <div
         className="pointer-events-none absolute inset-0 opacity-30"
         aria-hidden

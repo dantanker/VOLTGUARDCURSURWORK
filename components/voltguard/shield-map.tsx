@@ -43,11 +43,16 @@ function ShieldLeafletMap() {
       SERVICE_AREA_CENTER.lng,
     ]
 
+    const isTouch =
+      typeof window !== "undefined" &&
+      window.matchMedia("(max-width: 767px)").matches
+
     const map = L.map(containerRef.current, {
       center,
       zoom: 9,
       zoomControl: false,
-      scrollWheelZoom: true,
+      scrollWheelZoom: !isTouch,
+      dragging: true,
       attributionControl: false,
     })
 
@@ -122,17 +127,17 @@ function ShieldLeafletMap() {
           type="button"
           onClick={zoomIn}
           aria-label="Zoom in"
-          className="flex h-7 w-7 items-center justify-center rounded-md border border-slate-600/80 bg-slate-900/90 p-0 text-slate-200 shadow-md backdrop-blur-sm transition-colors hover:bg-slate-800 hover:text-white"
+          className="flex h-10 w-10 md:h-7 md:w-7 items-center justify-center rounded-md border border-slate-600/80 bg-slate-900/90 p-0 text-slate-200 shadow-md backdrop-blur-sm transition-colors hover:bg-slate-800 hover:text-white"
         >
-          <Plus className="h-3.5 w-3.5 shrink-0" strokeWidth={2.5} />
+          <Plus className="h-4 w-4 md:h-3.5 md:w-3.5 shrink-0" strokeWidth={2.5} />
         </button>
         <button
           type="button"
           onClick={zoomOut}
           aria-label="Zoom out"
-          className="flex h-7 w-7 items-center justify-center rounded-md border border-slate-600/80 bg-slate-900/90 p-0 text-slate-200 shadow-md backdrop-blur-sm transition-colors hover:bg-slate-800 hover:text-white"
+          className="flex h-10 w-10 md:h-7 md:w-7 items-center justify-center rounded-md border border-slate-600/80 bg-slate-900/90 p-0 text-slate-200 shadow-md backdrop-blur-sm transition-colors hover:bg-slate-800 hover:text-white"
         >
-          <Minus className="h-3.5 w-3.5 shrink-0" strokeWidth={2.5} />
+          <Minus className="h-4 w-4 md:h-3.5 md:w-3.5 shrink-0" strokeWidth={2.5} />
         </button>
       </div>
     </>

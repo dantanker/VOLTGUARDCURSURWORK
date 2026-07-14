@@ -90,10 +90,10 @@ export function ImageComparison({
         />
       </div>
 
-      <span className="pointer-events-none absolute left-3 top-3 z-20 rounded-full bg-slate-950/80 px-2.5 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-slate-300 ring-1 ring-slate-700/80 backdrop-blur-sm">
+      <span className="pointer-events-none absolute left-3 top-3 z-20 rounded-full bg-slate-950/80 px-2.5 py-1 text-xs font-semibold uppercase tracking-wider text-slate-300 ring-1 ring-slate-700/80 backdrop-blur-sm md:py-0.5 md:text-[10px]">
         Before
       </span>
-      <span className="pointer-events-none absolute right-3 top-3 z-20 rounded-full bg-orange-500/90 px-2.5 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-white shadow-sm">
+      <span className="pointer-events-none absolute right-3 top-3 z-20 rounded-full bg-orange-500/90 px-2.5 py-1 text-xs font-semibold uppercase tracking-wider text-white shadow-sm md:py-0.5 md:text-[10px]">
         After
       </span>
 

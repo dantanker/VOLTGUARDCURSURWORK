@@ -39,7 +39,7 @@ export function ZoomParallax({ images }: ZoomParallaxProps) {
   ]
 
   return (
-    <div ref={container} className="relative h-[300vh]">
+    <div ref={container} className="relative h-[180vh] md:h-[300vh]">
       <div className="sticky top-0 h-screen overflow-hidden">
         {images.map(({ src, alt }, index) => {
           const scale = scales[index % scales.length]
@@ -50,13 +50,13 @@ export function ZoomParallax({ images }: ZoomParallaxProps) {
               style={{ scale }}
               className={`absolute top-0 flex h-full w-full items-center justify-center ${positionClasses[index] ?? ""}`}
             >
-              <div className="relative h-[25vh] w-[25vw] overflow-hidden rounded-xl shadow-xl ring-1 ring-white/10">
+              <div className="relative h-[28vh] w-[42vw] overflow-hidden rounded-xl shadow-xl ring-1 ring-white/10 md:h-[25vh] md:w-[25vw]">
                 <Image
                   src={src}
                   alt={alt || `Project photo ${index + 1}`}
                   fill
                   className="object-cover"
-                  sizes="35vw"
+                  sizes="(max-width: 768px) 55vw, 35vw"
                   draggable={false}
                 />
               </div>

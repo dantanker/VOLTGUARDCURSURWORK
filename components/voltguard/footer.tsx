@@ -113,19 +113,19 @@ export function Footer() {
             <SpotlightButton
               href={PHONE_LINK}
               onClick={handlePhoneClick}
-              className="h-10 px-6 w-full sm:w-auto"
+              className="h-12 px-6 w-full sm:h-10 sm:w-auto"
             >
               <Phone className="h-4 w-4 text-white" />
               <SpotlightButtonLabel className="text-base">
                 Call {PHONE_NUMBER}
               </SpotlightButtonLabel>
             </SpotlightButton>
-            <QuoteCtaButton location="footer" className="h-10 px-6 w-full sm:w-auto" />
+            <QuoteCtaButton location="footer" className="h-12 px-6 w-full sm:h-10 sm:w-auto" />
           </div>
         </div>
       </div>
 
-      <footer id="contact" className="relative z-10 scroll-mt-20 pt-5 pb-4">
+      <footer id="contact" className="relative z-10 scroll-mt-24 md:scroll-mt-40 pt-5 pb-24 md:pb-4">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="border-b border-slate-800 pb-5 mb-5">
             <PartnerMarqueeInline />
@@ -154,7 +154,7 @@ export function Footer() {
                     rel="noopener noreferrer"
                     aria-label={social.label}
                     onClick={() => handleSocialClick(social.shortLabel)}
-                    className="flex h-7 w-7 items-center justify-center rounded border border-slate-700/80 bg-slate-800/60 text-slate-400 transition-colors hover:border-orange-500/40 hover:text-orange-300"
+                    className="flex h-10 w-10 md:h-7 md:w-7 items-center justify-center rounded border border-slate-700/80 bg-slate-800/60 text-slate-400 transition-colors hover:border-orange-500/40 hover:text-orange-300"
                   >
                     <SocialIcon label={social.shortLabel} />
                   </a>

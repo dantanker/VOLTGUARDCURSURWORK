@@ -101,7 +101,7 @@ function GalleryComparison({
 
 export function GallerySection() {
   return (
-    <section id="gallery" className="relative scroll-mt-20 py-6 md:py-8">
+    <section id="gallery" className="relative scroll-mt-24 md:scroll-mt-40 py-6 md:py-8">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-6 md:mb-7">
           <FadeInUp delay={0}>

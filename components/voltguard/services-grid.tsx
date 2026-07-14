@@ -8,7 +8,7 @@ export function ServicesGrid() {
   return (
     <section
       id="services"
-      className="relative scroll-mt-20 overflow-hidden"
+      className="relative scroll-mt-24 md:scroll-mt-40 overflow-hidden"
     >
       <div className="relative z-10 max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pt-4 md:pt-5 pb-2 md:pb-3">
         <div className="text-center">

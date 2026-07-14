@@ -1,5 +1,6 @@
 "use client"
 
+import type { ReactNode } from "react"
 import {
   SpotlightButton,
   SpotlightButtonLabel,
@@ -13,6 +14,7 @@ type QuoteCtaButtonProps = {
   className?: string
   fullWidth?: boolean
   onAfterClick?: () => void
+  children?: ReactNode
 }
 
 export function QuoteCtaButton({
@@ -20,6 +22,7 @@ export function QuoteCtaButton({
   className,
   fullWidth = false,
   onAfterClick,
+  children,
 }: QuoteCtaButtonProps) {
   const { openQuoteModal } = useQuoteModal()
 
@@ -33,7 +36,7 @@ export function QuoteCtaButton({
       onClick={handleClick}
       className={cn(fullWidth && "w-full", className)}
     >
-      <SpotlightButtonLabel>{CTA_LABEL}</SpotlightButtonLabel>
+      {children ?? <SpotlightButtonLabel>{CTA_LABEL}</SpotlightButtonLabel>}
     </SpotlightButton>
   )
 }
