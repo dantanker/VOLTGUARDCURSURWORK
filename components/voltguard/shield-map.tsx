@@ -7,6 +7,7 @@ import {
   SERVICE_AREA_CENTER,
   SERVICE_ZONE_RADIUS_METERS,
 } from "@/lib/service-area-locations"
+import { cn } from "@/lib/utils"
 
 const SHIELD_CLIP_ID = "voltguard-shield-clip"
 const MAP_SHIELD_PATH =
@@ -15,12 +16,21 @@ const LEAFLET_CSS = "https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
 const LEAFLET_JS = "https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
 const LEAFLET_STYLE_ID = "voltguard-leaflet-css"
 
-function ShieldLeafletMap() {
+type MapVariant = "shield" | "simple"
+
+function ShieldLeafletMap({
+  variant,
+  interactive,
+}: {
+  variant: MapVariant
+  interactive: boolean
+}) {
   const containerRef = useRef<HTMLDivElement>(null)
   const mapRef = useRef<L.Map | null>(null)
   const [leafletReady, setLeafletReady] = useState(
     () => typeof window !== "undefined" && Boolean(window.L)
   )
+  const [mapUnlocked, setMapUnlocked] = useState(interactive)
 
   useEffect(() => {
     if (document.getElementById(LEAFLET_STYLE_ID)) return
@@ -42,17 +52,15 @@ function ShieldLeafletMap() {
       SERVICE_AREA_CENTER.lat,
       SERVICE_AREA_CENTER.lng,
     ]
-
-    const isTouch =
-      typeof window !== "undefined" &&
-      window.matchMedia("(max-width: 767px)").matches
+    const isSimple = variant === "simple"
 
     const map = L.map(containerRef.current, {
       center,
-      zoom: 9,
+      zoom: isSimple ? 10 : 9,
       zoomControl: false,
-      scrollWheelZoom: !isTouch,
-      dragging: true,
+      scrollWheelZoom: false,
+      dragging: interactive || mapUnlocked,
+      tap: interactive || mapUnlocked,
       attributionControl: false,
     })
 
@@ -68,9 +76,9 @@ function ShieldLeafletMap() {
       radius: SERVICE_ZONE_RADIUS_METERS,
       color: "#ea580c",
       fillColor: "#f97316",
-      fillOpacity: 0.14,
+      fillOpacity: 0.16,
       weight: 2,
-      opacity: 0.5,
+      opacity: 0.55,
     }).addTo(map)
 
     const markerIcon = L.divIcon({
@@ -82,13 +90,17 @@ function ShieldLeafletMap() {
 
     L.marker(center, { icon: markerIcon }).addTo(map)
 
-    map.fitBounds(zone.getBounds(), { padding: [28, 28] })
+    map.fitBounds(zone.getBounds(), {
+      padding: isSimple ? [20, 20] : [28, 28],
+    })
 
     mapRef.current = map
 
     const resize = () => {
       map.invalidateSize()
-      map.fitBounds(zone.getBounds(), { padding: [28, 28] })
+      map.fitBounds(zone.getBounds(), {
+        padding: isSimple ? [20, 20] : [28, 28],
+      })
     }
     const t1 = window.setTimeout(resize, 100)
     const t2 = window.setTimeout(resize, 400)
@@ -101,10 +113,22 @@ function ShieldLeafletMap() {
       map.remove()
       mapRef.current = null
     }
-  }, [leafletReady])
+  }, [leafletReady, variant, interactive])
+
+  useEffect(() => {
+    const map = mapRef.current as (L.Map & { dragging?: { enable: () => void; disable: () => void } }) | null
+    if (!map?.dragging) return
+    if (mapUnlocked) {
+      map.dragging.enable()
+    } else {
+      map.dragging.disable()
+    }
+  }, [mapUnlocked])
 
   const zoomIn = () => mapRef.current?.zoomIn()
   const zoomOut = () => mapRef.current?.zoomOut()
+
+  const showTapOverlay = variant === "simple" && !mapUnlocked
 
   return (
     <>
@@ -119,32 +143,65 @@ function ShieldLeafletMap() {
       <div
         ref={containerRef}
         className="voltguard-shield-map absolute inset-0 h-full w-full"
-        aria-label="Interactive service area map"
+        aria-label="Service area map"
       />
-      <div className="pointer-events-none absolute inset-0 z-[400] bg-orange-600/[0.07] mix-blend-soft-light" aria-hidden />
-      <div className="absolute left-[3.75rem] top-[6.5rem] z-[500] flex flex-col gap-1.5">
+      <div
+        className="pointer-events-none absolute inset-0 z-[400] bg-orange-600/[0.07] mix-blend-soft-light"
+        aria-hidden
+      />
+
+      {showTapOverlay && (
+        <button
+          type="button"
+          onClick={() => setMapUnlocked(true)}
+          className="absolute inset-0 z-[450] flex items-end justify-center bg-gradient-to-t from-slate-950/70 via-transparent to-transparent pb-4"
+        >
+          <span className="rounded-full border border-white/20 bg-slate-950/80 px-3 py-1.5 text-xs font-medium text-white backdrop-blur-sm">
+            Tap to explore map
+          </span>
+        </button>
+      )}
+
+      <div
+        className={cn(
+          "absolute z-[500] flex flex-col gap-1.5",
+          variant === "simple"
+            ? "right-3 bottom-3"
+            : "left-[3.75rem] top-[6.5rem]"
+        )}
+      >
         <button
           type="button"
           onClick={zoomIn}
           aria-label="Zoom in"
-          className="flex h-10 w-10 md:h-7 md:w-7 items-center justify-center rounded-md border border-slate-600/80 bg-slate-900/90 p-0 text-slate-200 shadow-md backdrop-blur-sm transition-colors hover:bg-slate-800 hover:text-white"
+          className="flex h-10 w-10 items-center justify-center rounded-lg border border-slate-600/80 bg-slate-900/90 p-0 text-slate-200 shadow-md backdrop-blur-sm transition-colors hover:bg-slate-800 hover:text-white md:h-8 md:w-8"
         >
-          <Plus className="h-4 w-4 md:h-3.5 md:w-3.5 shrink-0" strokeWidth={2.5} />
+          <Plus className="h-4 w-4 shrink-0" strokeWidth={2.5} />
         </button>
         <button
           type="button"
           onClick={zoomOut}
           aria-label="Zoom out"
-          className="flex h-10 w-10 md:h-7 md:w-7 items-center justify-center rounded-md border border-slate-600/80 bg-slate-900/90 p-0 text-slate-200 shadow-md backdrop-blur-sm transition-colors hover:bg-slate-800 hover:text-white"
+          className="flex h-10 w-10 items-center justify-center rounded-lg border border-slate-600/80 bg-slate-900/90 p-0 text-slate-200 shadow-md backdrop-blur-sm transition-colors hover:bg-slate-800 hover:text-white md:h-8 md:w-8"
         >
-          <Minus className="h-4 w-4 md:h-3.5 md:w-3.5 shrink-0" strokeWidth={2.5} />
+          <Minus className="h-4 w-4 shrink-0" strokeWidth={2.5} />
         </button>
       </div>
     </>
   )
 }
 
-function ShieldMapInner() {
+function SimpleMap() {
+  return (
+    <div className="relative w-full overflow-hidden rounded-2xl border border-slate-700/80 bg-slate-900 shadow-[0_12px_36px_rgba(0,0,0,0.45)]">
+      <div className="relative aspect-[4/3] w-full">
+        <ShieldLeafletMap variant="simple" interactive={false} />
+      </div>
+    </div>
+  )
+}
+
+function ShieldMapFrame() {
   return (
     <div className="relative mx-auto w-full max-w-[580px] lg:max-w-[640px]">
       <div
@@ -202,13 +259,21 @@ function ShieldMapInner() {
         className="relative aspect-[5/6] w-full overflow-hidden bg-[#1e293b] shadow-[0_20px_50px_rgba(0,0,0,0.7)]"
         style={{ clipPath: `url(#${SHIELD_CLIP_ID})` }}
       >
-        <ShieldLeafletMap />
+        <ShieldLeafletMap variant="shield" interactive />
       </div>
     </div>
   )
 }
 
-export function ShieldMap() {
+export function ShieldMap({
+  variant = "shield",
+}: {
+  variant?: MapVariant
+}) {
+  if (variant === "simple") {
+    return <SimpleMap />
+  }
+
   return (
     <>
       <svg width="0" height="0" className="absolute" aria-hidden>
@@ -218,7 +283,7 @@ export function ShieldMap() {
           </clipPath>
         </defs>
       </svg>
-      <ShieldMapInner />
+      <ShieldMapFrame />
     </>
   )
 }

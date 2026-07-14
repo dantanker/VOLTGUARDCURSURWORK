@@ -1,6 +1,9 @@
 import { ShinyHeading } from "@/components/ShinyText"
 import { ShieldMap } from "@/components/voltguard/shield-map"
-import { ServiceAreaCards } from "@/components/voltguard/service-area-cards"
+import {
+  ServiceAreaCards,
+  ServiceAreaMobileCard,
+} from "@/components/voltguard/service-area-cards"
 import { FadeInUp, SlideInLeft, SlideInRight } from "@/lib/scroll-animations"
 
 export function ServiceAreaSection() {
@@ -36,7 +39,18 @@ export function ServiceAreaSection() {
           </FadeInUp>
         </div>
 
-        <div className="grid lg:grid-cols-2 gap-8 lg:gap-10 items-center">
+        {/* Mobile: simple map + one info card */}
+        <div className="space-y-5 lg:hidden">
+          <FadeInUp delay={0.12}>
+            <ShieldMap variant="simple" />
+          </FadeInUp>
+          <FadeInUp delay={0.18}>
+            <ServiceAreaMobileCard />
+          </FadeInUp>
+        </div>
+
+        {/* Desktop: cards carousel + shield map */}
+        <div className="hidden lg:grid lg:grid-cols-2 gap-8 lg:gap-10 items-center">
           <SlideInLeft delay={0.15}>
             <div className="min-w-0 w-full">
               <ServiceAreaCards />
@@ -45,7 +59,7 @@ export function ServiceAreaSection() {
 
           <SlideInRight delay={0.2}>
             <div className="min-w-0 w-full flex justify-center lg:justify-end">
-              <ShieldMap />
+              <ShieldMap variant="shield" />
             </div>
           </SlideInRight>
         </div>

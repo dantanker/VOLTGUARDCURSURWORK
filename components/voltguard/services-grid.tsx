@@ -1,7 +1,6 @@
 "use client"
 
 import { ServicesArcGallery } from "./services-arc-gallery"
-import { ServicesMobileCarousel } from "./services-mobile-carousel"
 import { ShinyHeading } from "@/components/ShinyText"
 import { FadeInUp } from "@/lib/scroll-animations"
 
@@ -32,13 +31,7 @@ export function ServicesGrid() {
         </div>
       </div>
 
-      {/* Mobile: stable peek carousel */}
-      <div className="relative z-10 md:hidden pb-2">
-        <ServicesMobileCarousel />
-      </div>
-
-      {/* Desktop: original arc gallery */}
-      <div className="relative z-10 hidden md:block w-full h-[480px]">
+      <div className="relative z-10 w-full h-[360px] md:h-[480px]">
         <ServicesArcGallery />
       </div>
     </section>

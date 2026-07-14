@@ -12,6 +12,7 @@ import {
   Phone,
   Receipt,
   Search,
+  Shield,
   XCircle,
 } from "lucide-react"
 import {
@@ -96,7 +97,7 @@ function CardShell({
   )
 }
 
-function CoverageZoneSearch() {
+function CoverageZoneSearch({ compact = false }: { compact?: boolean }) {
   const [query, setQuery] = useState("")
 
   const result = useMemo(() => {
@@ -146,7 +147,7 @@ function CoverageZoneSearch() {
   }, [query])
 
   return (
-    <div className="space-y-4">
+    <div className={cn("space-y-4", compact && "space-y-3")}>
       <div className="relative">
         <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-500" />
         <Input
@@ -154,7 +155,7 @@ function CoverageZoneSearch() {
           value={query}
           onChange={(e) => setQuery(e.target.value)}
           placeholder="Search city or ZIP code..."
-          className="h-11 border-slate-600/80 bg-slate-900/60 pl-10 text-white placeholder:text-slate-500 focus-visible:border-orange-500/50 focus-visible:ring-orange-500/20"
+          className="h-11 border-slate-600/80 bg-slate-900/60 pl-10 text-base text-white placeholder:text-slate-500 focus-visible:border-orange-500/50 focus-visible:ring-orange-500/20 md:text-sm"
         />
       </div>
 
@@ -175,7 +176,7 @@ function CoverageZoneSearch() {
           <p className="leading-relaxed">{result.message}</p>
         </div>
       ) : (
-        <p className="text-xs text-slate-500">
+        <p className="text-sm text-slate-500 md:text-xs">
           Enter your city or ZIP to check if VoltGuard serves your area.
         </p>
       )}
@@ -188,13 +189,56 @@ function CoverageZoneSearch() {
           {SERVICE_AREA_CITIES.map((city) => (
             <li
               key={city}
-              className="flex items-center gap-2 rounded-lg border border-slate-700/60 bg-slate-900/40 px-3 py-2 text-xs text-slate-300"
+              className="flex items-center gap-2 rounded-lg border border-slate-700/60 bg-slate-900/40 px-3 py-2.5 text-sm text-slate-300 md:py-2 md:text-xs"
             >
               <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-orange-500" />
               {city}
             </li>
           ))}
         </ul>
+      </div>
+    </div>
+  )
+}
+
+/** One simple card for mobile — no swipe carousel. */
+export function ServiceAreaMobileCard() {
+  return (
+    <div className="rounded-2xl border border-slate-700/80 bg-slate-900/80 p-5 shadow-[0_8px_28px_rgba(0,0,0,0.35)]">
+      <div className="mb-4 flex items-start gap-3">
+        <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-orange-500/15 ring-1 ring-orange-500/25">
+          <MapPin className="h-5 w-5 text-orange-400" />
+        </span>
+        <div>
+          <h3 className="text-lg font-semibold text-white">Coverage & hours</h3>
+          <p className="mt-0.5 text-sm text-slate-400">
+            Northwest suburbs · 24/7 emergencies
+          </p>
+        </div>
+      </div>
+
+      <CoverageZoneSearch compact />
+
+      <div className="mt-4 space-y-3 border-t border-slate-700/60 pt-4">
+        <div className="rounded-xl border border-orange-500/25 bg-orange-500/10 px-4 py-3">
+          <p className="text-sm font-semibold text-orange-100">{BUSINESS_HOURS}</p>
+          <p className="mt-1 text-xs text-orange-200/70">
+            Mon–Sat 7 AM – 9 PM for scheduled work
+          </p>
+        </div>
+
+        <div className="flex items-center gap-2 rounded-xl border border-blue-500/20 bg-blue-500/10 px-4 py-3 text-sm text-blue-100">
+          <Shield className="h-4 w-4 shrink-0 text-blue-300" />
+          <span>Illinois licensed · Bonded &amp; insured</span>
+        </div>
+
+        <a
+          href={PHONE_LINK}
+          className="flex min-h-12 items-center justify-center gap-2 rounded-xl border border-orange-500/40 bg-orange-500/15 px-5 py-3 text-base font-semibold text-orange-100"
+        >
+          <Phone className="h-4 w-4" />
+          Call {PHONE_NUMBER}
+        </a>
       </div>
     </div>
   )

@@ -206,11 +206,14 @@ export function Footer() {
               </p>
             </div>
 
-            <div id="licenses" className="scroll-mt-20">
+            <div id="licenses" className="scroll-mt-24 md:scroll-mt-40">
               <h3 className="text-[11px] font-semibold uppercase tracking-wider text-slate-300 mb-2 flex items-center gap-1">
                 <Shield className="h-3 w-3 text-orange-400" />
                 Licenses
               </h3>
+              <p className="mb-2 text-xs font-medium text-orange-300/90">
+                Fully licensed electrical contractor
+              </p>
               <ul className="space-y-1.5">
                 {FOOTER_LICENSES.map((license) => (
                   <li key={license.label} className="text-[11px]">
