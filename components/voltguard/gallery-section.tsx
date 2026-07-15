@@ -135,7 +135,13 @@ function MobileProjectPhotos() {
     <div className="mt-8">
       <Carousel
         setApi={setApi}
-        opts={{ align: "center", loop: false }}
+        opts={{
+          align: "center",
+          loop: false,
+          dragFree: false,
+          dragThreshold: 12,
+          containScroll: "trimSnaps",
+        }}
         className="w-full"
       >
         <CarouselContent className="-ml-3">

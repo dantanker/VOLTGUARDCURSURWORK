@@ -7,10 +7,10 @@ import { ReactNode } from "react"
 export function FadeInUp({ children, delay = 0 }: { children: ReactNode; delay?: number }) {
   return (
     <motion.div
-      initial={{ opacity: 0, y: 24 }}
+      initial={{ opacity: 0, y: 12 }}
       whileInView={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.45, delay }}
-      viewport={{ once: true, amount: 0.15, margin: "0px 0px -40px 0px" }}
+      transition={{ duration: 0.35, delay }}
+      viewport={{ once: true, amount: 0.12, margin: "0px 0px -24px 0px" }}
     >
       {children}
     </motion.div>
@@ -21,10 +21,10 @@ export function FadeInUp({ children, delay = 0 }: { children: ReactNode; delay?:
 export function SlideInLeft({ children, delay = 0 }: { children: ReactNode; delay?: number }) {
   return (
     <motion.div
-      initial={{ opacity: 0, x: -32 }}
+      initial={{ opacity: 0, x: -16 }}
       whileInView={{ opacity: 1, x: 0 }}
-      transition={{ duration: 0.5, delay }}
-      viewport={{ once: true, amount: 0.15, margin: "0px 0px -40px 0px" }}
+      transition={{ duration: 0.35, delay }}
+      viewport={{ once: true, amount: 0.12, margin: "0px 0px -24px 0px" }}
     >
       {children}
     </motion.div>
@@ -35,10 +35,10 @@ export function SlideInLeft({ children, delay = 0 }: { children: ReactNode; dela
 export function SlideInRight({ children, delay = 0 }: { children: ReactNode; delay?: number }) {
   return (
     <motion.div
-      initial={{ opacity: 0, x: 32 }}
+      initial={{ opacity: 0, x: 16 }}
       whileInView={{ opacity: 1, x: 0 }}
-      transition={{ duration: 0.5, delay }}
-      viewport={{ once: true, amount: 0.15, margin: "0px 0px -40px 0px" }}
+      transition={{ duration: 0.35, delay }}
+      viewport={{ once: true, amount: 0.12, margin: "0px 0px -24px 0px" }}
     >
       {children}
     </motion.div>
@@ -49,10 +49,10 @@ export function SlideInRight({ children, delay = 0 }: { children: ReactNode; del
 export function ScaleIn({ children, delay = 0 }: { children: ReactNode; delay?: number }) {
   return (
     <motion.div
-      initial={{ opacity: 0, scale: 0.8 }}
+      initial={{ opacity: 0, scale: 0.96 }}
       whileInView={{ opacity: 1, scale: 1 }}
-      transition={{ duration: 0.5, delay }}
-      viewport={{ once: true, amount: 0.3 }}
+      transition={{ duration: 0.35, delay }}
+      viewport={{ once: true, amount: 0.2 }}
     >
       {children}
     </motion.div>
@@ -129,10 +129,10 @@ export function BlurIn({ children, delay = 0 }: { children: ReactNode; delay?: n
 export function ExpandIn({ children, delay = 0 }: { children: ReactNode; delay?: number }) {
   return (
     <motion.div
-      initial={{ opacity: 0, scale: 0.5 }}
+      initial={{ opacity: 0, scale: 0.96 }}
       whileInView={{ opacity: 1, scale: 1 }}
-      transition={{ duration: 0.6, delay, type: "spring", stiffness: 100 }}
-      viewport={{ once: true, amount: 0.3 }}
+      transition={{ duration: 0.35, delay }}
+      viewport={{ once: true, amount: 0.2 }}
     >
       {children}
     </motion.div>

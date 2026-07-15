@@ -127,7 +127,13 @@ function MobileTestimonialsCarousel() {
     <div className="w-full">
       <Carousel
         setApi={setApi}
-        opts={{ align: "start", loop: false, dragFree: false }}
+        opts={{
+          align: "start",
+          loop: false,
+          dragFree: false,
+          dragThreshold: 12,
+          containScroll: "trimSnaps",
+        }}
         className="w-full"
       >
         <CarouselContent className="-ml-4">

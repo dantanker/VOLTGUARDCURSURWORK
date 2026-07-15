@@ -21,7 +21,6 @@ type Layout = {
 
 function getLayout(containerWidth: number): Layout {
   const isMobile = containerWidth < 768
-  // Mobile: ~72% of viewport so side cards peek — keeps the arc look without crowding
   const cardWidth = isMobile
     ? Math.round(Math.min(260, Math.max(210, containerWidth * 0.72)))
     : DESKTOP_CARD_WIDTH
@@ -78,10 +77,12 @@ export function ServicesArcGallery() {
     while (targetX.current >= setWidth * 2) {
       targetX.current -= setWidth
       currentX.current -= setWidth
+      dragStartOffset.current -= setWidth
     }
     while (targetX.current < setWidth) {
       targetX.current += setWidth
       currentX.current += setWidth
+      dragStartOffset.current += setWidth
     }
   }, [])
 
@@ -102,19 +103,34 @@ export function ServicesArcGallery() {
     const centerX = containerWidth / 2
     const paddingLeft = centerX - cardWidth / 2
 
-    // Lighter transforms on phone — cheaper while scrolling the page nearby
-    const rotateAmount = isMobile ? 4 : 12
-    const arcAmount = isMobile ? -10 : -28
-    const scaleAmount = isMobile ? 0.03 : 0.08
+    // Mobile: skip heavy rotate/scale — only a light Y arc on nearby cards
+    const rotateAmount = isMobile ? 0 : 12
+    const arcAmount = isMobile ? -6 : -28
+    const scaleAmount = isMobile ? 0 : 0.08
+    const visibleRadius = isMobile ? stride * 1.75 : Number.POSITIVE_INFINITY
 
     cardsRef.current.forEach((card, index) => {
       if (!card) return
       const cardCenter = paddingLeft + index * stride + cardWidth / 2 - scrollX
       const offset = cardCenter - centerX
+
+      if (Math.abs(offset) > visibleRadius) {
+        if (card.dataset.arcActive === "1") {
+          card.style.transform = ""
+          card.dataset.arcActive = "0"
+        }
+        return
+      }
+
       const norm = Math.max(-1, Math.min(1, offset / Math.max(centerX, 1)))
       const eased = Math.sin((norm * Math.PI) / 2)
 
-      card.style.transform = `translate3d(0, ${arcAmount * (1 - Math.abs(eased))}px, 0) rotate(${eased * rotateAmount}deg) scale(${1 - Math.abs(eased) * scaleAmount})`
+      if (isMobile) {
+        card.style.transform = `translate3d(0, ${arcAmount * (1 - Math.abs(eased))}px, 0)`
+      } else {
+        card.style.transform = `translate3d(0, ${arcAmount * (1 - Math.abs(eased))}px, 0) rotate(${eased * rotateAmount}deg) scale(${1 - Math.abs(eased) * scaleAmount})`
+      }
+      card.dataset.arcActive = "1"
     })
   }, [])
 
@@ -199,8 +215,8 @@ export function ServicesArcGallery() {
         const { isMobile } = layoutRef.current
 
         if (!isDragging.current) {
-          const stopThreshold = isMobile ? 0.04 : 0.02
-          const friction = isMobile ? 4.2 : 3.2
+          const stopThreshold = isMobile ? 0.05 : 0.02
+          const friction = isMobile ? 5.2 : 3.2
 
           if (Math.abs(velocity.current) > stopThreshold) {
             targetX.current += velocity.current * (dt * 1000)
@@ -215,10 +231,12 @@ export function ServicesArcGallery() {
             }
           }
 
-          const follow = isMobile ? 18 : 14
+          const follow = isMobile ? 22 : 14
           currentX.current = damp(currentX.current, targetX.current, follow, dt)
         } else {
-          currentX.current = targetX.current
+          // Drag position is applied directly in the pointer handler
+          rafId.current = 0
+          return
         }
 
         normalizeScroll()
@@ -226,10 +244,12 @@ export function ServicesArcGallery() {
 
         const settled =
           !isDragging.current &&
-          Math.abs(velocity.current) < (layoutRef.current.isMobile ? 0.04 : 0.02) &&
-          Math.abs(currentX.current - targetX.current) < 0.4
+          Math.abs(velocity.current) < (layoutRef.current.isMobile ? 0.05 : 0.02) &&
+          Math.abs(currentX.current - targetX.current) < 0.5
 
         if (settled) {
+          const track = trackRef.current
+          if (track) track.style.willChange = "auto"
           rafId.current = 0
           return
         }
@@ -237,6 +257,8 @@ export function ServicesArcGallery() {
         rafId.current = requestAnimationFrame(tick)
       }
 
+      const track = trackRef.current
+      if (track) track.style.willChange = "transform"
       rafId.current = requestAnimationFrame(tick)
     }
 
@@ -248,6 +270,80 @@ export function ServicesArcGallery() {
       rafId.current = 0
     }
   }, [applyTrackPosition, normalizeScroll, snapToNearest])
+
+  // Non-passive listeners so preventDefault actually stops page scroll once we claim the gesture
+  useEffect(() => {
+    const container = containerRef.current
+    if (!container) return
+
+    const claimHorizontal = (clientX: number, clientY: number, pointerId: number) => {
+      isDragging.current = true
+      container.style.touchAction = "none"
+      try {
+        container.setPointerCapture(pointerId)
+      } catch {
+        // ignore
+      }
+      dragStartOffset.current = targetX.current
+      dragStartX.current = clientX
+      dragStartY.current = clientY
+      lastPointerX.current = clientX
+      lastPointerTime.current = performance.now()
+      if (rafId.current) {
+        cancelAnimationFrame(rafId.current)
+        rafId.current = 0
+      }
+      const track = trackRef.current
+      if (track) track.style.willChange = "transform"
+    }
+
+    const onPointerMove = (e: PointerEvent) => {
+      if (!isPointerDown.current) return
+      if (activePointerId.current !== null && e.pointerId !== activePointerId.current) {
+        return
+      }
+
+      const dxTotal = e.clientX - dragStartX.current
+      const dyTotal = e.clientY - dragStartY.current
+      const { isMobile } = layoutRef.current
+
+      if (!isDragging.current) {
+        const slop = isMobile ? 12 : 6
+        if (Math.abs(dxTotal) < slop && Math.abs(dyTotal) < slop) return
+
+        // Prefer vertical page scroll unless clearly horizontal
+        const bias = isMobile ? 1.25 : 0.85
+        if (Math.abs(dyTotal) > Math.abs(dxTotal) * bias) {
+          isPointerDown.current = false
+          activePointerId.current = null
+          return
+        }
+
+        claimHorizontal(e.clientX, e.clientY, e.pointerId)
+      }
+
+      e.preventDefault()
+
+      const now = performance.now()
+      const dtMs = Math.max(now - lastPointerTime.current, 1)
+      const frameDx = e.clientX - lastPointerX.current
+      const instant = -frameDx / dtMs
+      velocity.current = velocity.current * 0.55 + instant * 0.45
+
+      lastPointerX.current = e.clientX
+      lastPointerTime.current = now
+
+      targetX.current = dragStartOffset.current - (e.clientX - dragStartX.current)
+      currentX.current = targetX.current
+      normalizeScroll()
+      applyTrackPosition(currentX.current)
+    }
+
+    container.addEventListener("pointermove", onPointerMove, { passive: false })
+    return () => {
+      container.removeEventListener("pointermove", onPointerMove)
+    }
+  }, [applyTrackPosition, normalizeScroll])
 
   const endDrag = (e: React.PointerEvent) => {
     if (activePointerId.current !== null && e.pointerId !== activePointerId.current) {
@@ -271,19 +367,19 @@ export function ServicesArcGallery() {
     if (!wasDragging) return
 
     const { isMobile, stride } = layoutRef.current
-    const maxVel = isMobile ? 1.8 : 2.8
+    const maxVel = isMobile ? 1.4 : 2.8
     velocity.current = Math.max(-maxVel, Math.min(maxVel, velocity.current))
 
     if (isMobile) {
-      if (Math.abs(velocity.current) > 0.35) {
+      if (Math.abs(velocity.current) > 0.28) {
         const direction = velocity.current > 0 ? 1 : -1
         targetX.current =
-          Math.round(targetX.current / stride + direction * 0.25) * stride
-      }
-      snapPending.current = true
-      if (Math.abs(velocity.current) < 0.12) {
+          Math.round(targetX.current / stride + direction * 0.2) * stride
+      } else {
         snapToNearest()
       }
+      snapPending.current = true
+      velocity.current = 0
     }
 
     startLoopRef.current()
@@ -302,56 +398,6 @@ export function ServicesArcGallery() {
     dragStartOffset.current = targetX.current
     lastPointerX.current = e.clientX
     lastPointerTime.current = performance.now()
-  }
-
-  const onPointerMove = (e: React.PointerEvent) => {
-    if (!isPointerDown.current) return
-    if (activePointerId.current !== null && e.pointerId !== activePointerId.current) {
-      return
-    }
-
-    const dxTotal = e.clientX - dragStartX.current
-    const dyTotal = e.clientY - dragStartY.current
-
-    if (!isDragging.current) {
-      const slop = 6
-      if (Math.abs(dxTotal) < slop && Math.abs(dyTotal) < slop) return
-
-      // Prefer vertical page scroll unless clearly horizontal
-      if (Math.abs(dyTotal) > Math.abs(dxTotal) * 0.85) {
-        isPointerDown.current = false
-        activePointerId.current = null
-        return
-      }
-
-      isDragging.current = true
-      const container = containerRef.current
-      if (container) {
-        container.style.touchAction = "none"
-        container.setPointerCapture(e.pointerId)
-      }
-      dragStartOffset.current = targetX.current
-      dragStartX.current = e.clientX
-      lastPointerX.current = e.clientX
-      lastPointerTime.current = performance.now()
-    }
-
-    e.preventDefault()
-
-    const now = performance.now()
-    const dtMs = Math.max(now - lastPointerTime.current, 1)
-    const frameDx = e.clientX - lastPointerX.current
-    const instant = -frameDx / dtMs
-    velocity.current = velocity.current * 0.55 + instant * 0.45
-
-    lastPointerX.current = e.clientX
-    lastPointerTime.current = now
-
-    targetX.current = dragStartOffset.current - (e.clientX - dragStartX.current)
-    currentX.current = targetX.current
-    normalizeScroll()
-    applyTrackPosition(currentX.current)
-    startLoopRef.current()
   }
 
   const onWheel = (e: React.WheelEvent) => {
@@ -374,7 +420,6 @@ export function ServicesArcGallery() {
       className="services-arc-gallery relative w-full h-full overflow-hidden cursor-grab active:cursor-grabbing select-none"
       style={{ touchAction: "pan-y", overscrollBehaviorX: "contain" }}
       onPointerDown={onPointerDown}
-      onPointerMove={onPointerMove}
       onPointerUp={endDrag}
       onPointerCancel={endDrag}
       onWheel={onWheel}
@@ -383,7 +428,7 @@ export function ServicesArcGallery() {
     >
       <div
         ref={trackRef}
-        className="flex h-full items-start py-2 md:py-4 will-change-transform"
+        className="flex h-full items-start py-2 md:py-4"
         style={{
           width: "max-content",
           gap,
@@ -398,8 +443,9 @@ export function ServicesArcGallery() {
             ref={(el) => {
               cardsRef.current[index] = el
             }}
-            className="flex shrink-0 flex-col items-center will-change-transform pointer-events-none"
+            className="flex shrink-0 flex-col items-center pointer-events-none"
             style={{ width: cardWidth }}
+            data-arc-active="0"
           >
             <div
               className={

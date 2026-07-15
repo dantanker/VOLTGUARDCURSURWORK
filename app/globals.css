@@ -258,7 +258,12 @@ html {
   }
 
   .partner-marquee-track {
-    animation-duration: 70s;
+    animation: none !important;
+    transform: none;
+  }
+
+  .voltguard-shield-map.leaflet-container .leaflet-tile-pane {
+    filter: none;
   }
 }
 
