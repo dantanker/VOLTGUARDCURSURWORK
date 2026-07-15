@@ -1,3 +1,6 @@
+"use client"
+
+import { useEffect, useState } from "react"
 import { ShinyHeading } from "@/components/ShinyText"
 import { ShieldMap } from "@/components/voltguard/shield-map"
 import {
@@ -6,7 +9,19 @@ import {
 } from "@/components/voltguard/service-area-cards"
 import { FadeInUp, SlideInLeft, SlideInRight } from "@/lib/scroll-animations"
 
+const LG_QUERY = "(min-width: 1024px)"
+
 export function ServiceAreaSection() {
+  const [isDesktop, setIsDesktop] = useState<boolean | null>(null)
+
+  useEffect(() => {
+    const mql = window.matchMedia(LG_QUERY)
+    const sync = () => setIsDesktop(mql.matches)
+    sync()
+    mql.addEventListener("change", sync)
+    return () => mql.removeEventListener("change", sync)
+  }, [])
+
   return (
     <section id="service-area" className="relative scroll-mt-24 md:scroll-mt-40 pt-0 md:pt-2 pb-6 md:pb-8 overflow-hidden">
       <div
@@ -41,9 +56,11 @@ export function ServiceAreaSection() {
 
         {/* Mobile: simple map + one info card */}
         <div className="space-y-5 lg:hidden">
-          <FadeInUp delay={0.12}>
-            <ShieldMap variant="simple" />
-          </FadeInUp>
+          {isDesktop === false && (
+            <FadeInUp delay={0.12}>
+              <ShieldMap variant="simple" />
+            </FadeInUp>
+          )}
           <FadeInUp delay={0.18}>
             <ServiceAreaMobileCard />
           </FadeInUp>
@@ -59,7 +76,7 @@ export function ServiceAreaSection() {
 
           <SlideInRight delay={0.2}>
             <div className="min-w-0 w-full flex justify-center lg:justify-end">
-              <ShieldMap variant="shield" />
+              {isDesktop === true && <ShieldMap variant="shield" />}
             </div>
           </SlideInRight>
         </div>

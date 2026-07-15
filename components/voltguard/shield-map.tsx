@@ -42,6 +42,23 @@ function ShieldLeafletMap({
     document.head.appendChild(link)
   }, [])
 
+  // Next Script onReady may only run for one map instance; poll so every
+  // ShieldMap can init once window.L is available (e.g. after breakpoint swap).
+  useEffect(() => {
+    if (leafletReady) return
+    if (window.L) {
+      setLeafletReady(true)
+      return
+    }
+    const id = window.setInterval(() => {
+      if (window.L) {
+        setLeafletReady(true)
+        window.clearInterval(id)
+      }
+    }, 50)
+    return () => window.clearInterval(id)
+  }, [leafletReady])
+
   useEffect(() => {
     if (!leafletReady || !containerRef.current || !window.L || mapRef.current) {
       return

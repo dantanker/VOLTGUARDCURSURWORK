@@ -375,10 +375,12 @@ html {
   100% { opacity: 1; }
 }
 
-/* Shield map (Leaflet) */
-.voltguard-shield-map .leaflet-container {
+/* Shield map (Leaflet) — leaflet-container is on the same node as voltguard-shield-map */
+.voltguard-shield-map.leaflet-container {
   background: #1e293b;
   font-family: inherit;
+  height: 100%;
+  width: 100%;
 }
 
 .voltguard-shield-map .leaflet-tile-pane {
