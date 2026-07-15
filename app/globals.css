@@ -375,19 +375,20 @@ html {
   100% { opacity: 1; }
 }
 
-/* Shield map (Leaflet) — leaflet-container is on the same node as voltguard-shield-map */
+/* Shield map (Leaflet) — map root IS .leaflet-container */
 .voltguard-shield-map.leaflet-container {
-  background: #1e293b;
-  font-family: inherit;
-  height: 100%;
   width: 100%;
+  height: 100%;
+  background: #0f172a;
+  font-family: inherit;
+  z-index: 0;
 }
 
-.voltguard-shield-map .leaflet-tile-pane {
+.voltguard-shield-map.leaflet-container .leaflet-tile-pane {
   filter: brightness(1.26) contrast(1.03) sepia(0.14) hue-rotate(352deg) saturate(1.18);
 }
 
-.voltguard-shield-map .leaflet-control-container {
+.voltguard-shield-map.leaflet-container .leaflet-control-container {
   display: none;
 }
 
@@ -405,7 +406,7 @@ html {
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.6);
 }
 
-.voltguard-shield-map .leaflet-tooltip {
+.voltguard-shield-map.leaflet-container .leaflet-tooltip {
   background: #1e293b;
   border: 1px solid #475569;
   color: #f1f5f9;
@@ -416,6 +417,6 @@ html {
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
 }
 
-.voltguard-shield-map .leaflet-tooltip-top::before {
+.voltguard-shield-map.leaflet-container .leaflet-tooltip-top::before {
   border-top-color: #475569;
 }

@@ -1,20 +1,24 @@
 "use client"
 
 import { useEffect, useRef, useState } from "react"
-import Script from "next/script"
 import { Minus, Plus } from "lucide-react"
+import type { Map as LeafletMap } from "leaflet"
 import {
   SERVICE_AREA_CENTER,
   SERVICE_ZONE_RADIUS_METERS,
 } from "@/lib/service-area-locations"
 import { cn } from "@/lib/utils"
 
+import "leaflet/dist/leaflet.css"
+
 const SHIELD_CLIP_ID = "voltguard-shield-clip"
 const MAP_SHIELD_PATH =
   "M150 12 L278 48 L278 188 Q278 278 150 338 Q22 278 22 188 L22 48 Z"
-const LEAFLET_CSS = "https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
-const LEAFLET_JS = "https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
-const LEAFLET_STYLE_ID = "voltguard-leaflet-css"
+
+const TILE_URL =
+  "https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png"
+const TILE_FALLBACK_URL =
+  "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
 
 type MapVariant = "shield" | "simple"
 
@@ -26,115 +30,134 @@ function ShieldLeafletMap({
   interactive: boolean
 }) {
   const containerRef = useRef<HTMLDivElement>(null)
-  const mapRef = useRef<L.Map | null>(null)
-  const [leafletReady, setLeafletReady] = useState(
-    () => typeof window !== "undefined" && Boolean(window.L)
-  )
+  const mapRef = useRef<LeafletMap | null>(null)
   const [mapUnlocked, setMapUnlocked] = useState(interactive)
+  const [loadError, setLoadError] = useState(false)
 
   useEffect(() => {
-    if (document.getElementById(LEAFLET_STYLE_ID)) return
+    const container = containerRef.current
+    if (!container) return
 
-    const link = document.createElement("link")
-    link.id = LEAFLET_STYLE_ID
-    link.rel = "stylesheet"
-    link.href = LEAFLET_CSS
-    document.head.appendChild(link)
-  }, [])
+    let cancelled = false
+    let map: LeafletMap | null = null
+    let resizeObserver: ResizeObserver | null = null
+    let tileErrorCount = 0
+    const timeouts: number[] = []
 
-  // Next Script onReady may only run for one map instance; poll so every
-  // ShieldMap can init once window.L is available (e.g. after breakpoint swap).
-  useEffect(() => {
-    if (leafletReady) return
-    if (window.L) {
-      setLeafletReady(true)
-      return
-    }
-    const id = window.setInterval(() => {
-      if (window.L) {
-        setLeafletReady(true)
-        window.clearInterval(id)
+    const init = async () => {
+      try {
+        const L = (await import("leaflet")).default
+        if (cancelled || !containerRef.current) return
+
+        // Strict Mode remount can leave a stale Leaflet id
+        const el = containerRef.current as HTMLDivElement & {
+          _leaflet_id?: number
+        }
+        if (el._leaflet_id) {
+          delete el._leaflet_id
+          el.innerHTML = ""
+        }
+
+        const center: [number, number] = [
+          SERVICE_AREA_CENTER.lat,
+          SERVICE_AREA_CENTER.lng,
+        ]
+        const isSimple = variant === "simple"
+
+        map = L.map(el, {
+          center,
+          zoom: isSimple ? 10 : 9,
+          zoomControl: false,
+          scrollWheelZoom: false,
+          dragging: interactive,
+          attributionControl: false,
+        })
+
+        if (cancelled) {
+          map?.remove()
+          map = null
+          return
+        }
+
+        const tiles = L.tileLayer(TILE_URL, {
+          subdomains: "abcd",
+          maxZoom: 19,
+          crossOrigin: true,
+        })
+
+        tiles.on("tileerror", () => {
+          tileErrorCount += 1
+          if (tileErrorCount >= 4 && map && !cancelled) {
+            map.removeLayer(tiles)
+            L.tileLayer(TILE_FALLBACK_URL, {
+              subdomains: "abc",
+              maxZoom: 19,
+            }).addTo(map)
+            tileErrorCount = Number.POSITIVE_INFINITY
+          }
+        })
+
+        tiles.addTo(map)
+
+        const zone = L.circle(center, {
+          radius: SERVICE_ZONE_RADIUS_METERS,
+          color: "#ea580c",
+          fillColor: "#f97316",
+          fillOpacity: 0.16,
+          weight: 2,
+          opacity: 0.55,
+        }).addTo(map)
+
+        const markerIcon = L.divIcon({
+          className: "voltguard-map-marker",
+          html: `<div class="voltguard-map-marker__dot"></div>`,
+          iconSize: [16, 16],
+          iconAnchor: [8, 8],
+        })
+
+        L.marker(center, { icon: markerIcon }).addTo(map)
+
+        const fit = () => {
+          if (!map || cancelled) return
+          map.invalidateSize()
+          map.fitBounds(zone.getBounds(), {
+            padding: isSimple ? [20, 20] : [28, 28],
+          })
+        }
+
+        fit()
+        for (const ms of [50, 250, 600]) {
+          timeouts.push(window.setTimeout(fit, ms))
+        }
+
+        resizeObserver = new ResizeObserver(() => {
+          map?.invalidateSize({ animate: false })
+        })
+        resizeObserver.observe(el)
+
+        mapRef.current = map
+      } catch {
+        if (!cancelled) setLoadError(true)
       }
-    }, 50)
-    return () => window.clearInterval(id)
-  }, [leafletReady])
-
-  useEffect(() => {
-    if (!leafletReady || !containerRef.current || !window.L || mapRef.current) {
-      return
     }
 
-    const L = window.L
-    const center: [number, number] = [
-      SERVICE_AREA_CENTER.lat,
-      SERVICE_AREA_CENTER.lng,
-    ]
-    const isSimple = variant === "simple"
-
-    const map = L.map(containerRef.current, {
-      center,
-      zoom: isSimple ? 10 : 9,
-      zoomControl: false,
-      scrollWheelZoom: false,
-      dragging: interactive || mapUnlocked,
-      tap: interactive || mapUnlocked,
-      attributionControl: false,
-    })
-
-    L.tileLayer(
-      "https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png",
-      {
-        subdomains: "abcd",
-        maxZoom: 19,
-      }
-    ).addTo(map)
-
-    const zone = L.circle(center, {
-      radius: SERVICE_ZONE_RADIUS_METERS,
-      color: "#ea580c",
-      fillColor: "#f97316",
-      fillOpacity: 0.16,
-      weight: 2,
-      opacity: 0.55,
-    }).addTo(map)
-
-    const markerIcon = L.divIcon({
-      className: "voltguard-map-marker",
-      html: `<div class="voltguard-map-marker__dot"></div>`,
-      iconSize: [16, 16],
-      iconAnchor: [8, 8],
-    })
-
-    L.marker(center, { icon: markerIcon }).addTo(map)
-
-    map.fitBounds(zone.getBounds(), {
-      padding: isSimple ? [20, 20] : [28, 28],
-    })
-
-    mapRef.current = map
-
-    const resize = () => {
-      map.invalidateSize()
-      map.fitBounds(zone.getBounds(), {
-        padding: isSimple ? [20, 20] : [28, 28],
-      })
-    }
-    const t1 = window.setTimeout(resize, 100)
-    const t2 = window.setTimeout(resize, 400)
-    window.addEventListener("resize", resize)
+    void init()
 
     return () => {
-      window.clearTimeout(t1)
-      window.clearTimeout(t2)
-      window.removeEventListener("resize", resize)
-      map.remove()
+      cancelled = true
+      for (const id of timeouts) window.clearTimeout(id)
+      resizeObserver?.disconnect()
+      if (map) {
+        map.remove()
+        map = null
+      }
       mapRef.current = null
     }
-  }, [leafletReady, variant, interactive])
+  }, [variant, interactive])
 
   useEffect(() => {
-    const map = mapRef.current as (L.Map & { dragging?: { enable: () => void; disable: () => void } }) | null
-    if (!map?.dragging) return
+    const map = mapRef.current
+    if (!map) return
     if (mapUnlocked) {
       map.dragging.enable()
     } else {
@@ -149,19 +172,18 @@ function ShieldLeafletMap({
 
   return (
     <>
-      {!leafletReady && (
-        <Script
-          id="voltguard-leaflet-js"
-          src={LEAFLET_JS}
-          strategy="afterInteractive"
-          onReady={() => setLeafletReady(true)}
-        />
-      )}
       <div
         ref={containerRef}
-        className="voltguard-shield-map absolute inset-0 h-full w-full"
+        className="voltguard-shield-map absolute inset-0 z-0 h-full w-full min-h-[200px]"
         aria-label="Service area map"
       />
+
+      {loadError && (
+        <div className="absolute inset-0 z-[420] flex items-center justify-center bg-slate-900 px-4 text-center text-sm text-slate-300">
+          Map couldn&apos;t load. Please refresh the page.
+        </div>
+      )}
+
       <div
         className="pointer-events-none absolute inset-0 z-[400] bg-orange-600/[0.07] mix-blend-soft-light"
         aria-hidden
